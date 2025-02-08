@@ -1,6 +1,6 @@
 #ifndef TABLA_DISPERSION_H
 #define TABLA_DISPERSION_H
-
+#include <string>  
 #include <vector>
 #include <utility>
 
