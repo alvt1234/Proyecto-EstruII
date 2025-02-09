@@ -1,5 +1,6 @@
 #include "../include/arbolB.h"
 #include <iostream>
+#include <algorithm>
 
 NodoB::NodoB(bool hoja){
      esHoja=hoja;

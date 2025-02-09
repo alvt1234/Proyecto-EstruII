@@ -271,7 +271,6 @@ void gestionarPedidos() {
     }
 }
 
-
 int main(){
     int opcion;
 
@@ -306,6 +305,7 @@ int main(){
                 break;
             case 4:
                 Empleados();  
+                break;
             case 5:
                 gestionarVentas();
                 break;
@@ -318,4 +318,5 @@ int main(){
         }
     }
 }
+
 

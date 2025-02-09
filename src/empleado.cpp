@@ -1,4 +1,4 @@
-#include "empleado.h"
+#include "../include/empleado.h"
 #include <iostream>
 
 empleado::empleado() : id(0), nombre(""), departamento(""), puesto(""), salario(0), estado("inactivo") {}

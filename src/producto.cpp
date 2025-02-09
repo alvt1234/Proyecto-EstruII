@@ -1,4 +1,4 @@
-#include "producto.h"
+#include "../include/producto.h"
 
 producto::producto() : idProducto(0), nombre(""), categoria(""), precio(0), cantidadStock(0), estado("")
 {

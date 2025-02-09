@@ -1,4 +1,4 @@
-#include "venta.h" 
+#include "../include/venta.h" 
 
 venta::venta() {}
 

@@ -1,4 +1,4 @@
-#include "cliente.h"
+#include "../include/cliente.h"
 
 cliente::cliente(): idCliente(0), nombre(""), telefono(""), correo(""), saldo(0), historialCompras("")
 {
