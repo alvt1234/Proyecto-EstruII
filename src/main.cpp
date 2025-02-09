@@ -318,3 +318,9 @@ int main(){
         }
     }
 }
+=======
+int main() {
+    std::cout << "Hello, World!" << std::endl;
+    return 0;
+}
+>>>>>>> 69bd17d2669fd49d4f7518e9f54c954648888faf
