@@ -1,11 +1,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "venta.h"
-#include "cliente.h"
-#include "producto.h"
-#include "pedido.h"
-#include "empleado.h"
+#include "../include/venta.h"
+#include "../include/cliente.h"
+#include "../include/producto.h"
+#include "../include/pedido.h"
+#include "../include/empleado.h"
 using namespace std; 
 
 
