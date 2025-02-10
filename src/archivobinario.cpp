@@ -1,4 +1,4 @@
-#include "archivobinario.h"
+#include "../include/archivobinario.h"
 
 archivobinario::archivobinario(const string &nombre) : nombreArchivo(nombre), hFile(INVALID_HANDLE_VALUE)
 {

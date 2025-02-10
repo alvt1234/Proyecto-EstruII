@@ -1,3 +1,5 @@
+#ifndef PRODUCTO_H
+#define PRODUCTO_H
 #include <iostream>
 #include <string>
 using namespace std;
@@ -33,3 +35,5 @@ class producto {
     void setestado(string estado);
 
 };
+
+#endif

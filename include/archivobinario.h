@@ -1,3 +1,6 @@
+#ifndef ARCHIVO_BINARIO_H
+#define ARCHIVO_BINARIO_H
+
 #include <windows.h>
 #include <iostream>
 #include <string>
@@ -14,3 +17,5 @@ public:
     void aggcliente(int idcliente,string cliente,string telefono,string correo,double saldo,string historialcompras);
     ~archivobinario();
 };
+
+#endif
