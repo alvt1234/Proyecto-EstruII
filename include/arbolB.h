@@ -3,23 +3,24 @@
 
 #include <vector>
 
-class BNode {
+class NodoB{
 public:
     bool esHoja;
     std::vector<int> claves;
-    std::vector<BNode*> hijos;
-    BNode *siguiente;
+    std::vector<NodoB*> hijos;
+    NodoB* siguiente;
 
-    BNode(bool hoja);
+    NodoB(bool hoja);
 };
 
-class arbolB {
+class arbolB{
 private:
-    BNode *raiz;
+    NodoB* raiz;
     int grado;
-public:
-    arbolB(int grado);
 
+public:
+
+    arbolB(int _grado);
     void insertar(int clave);
     bool buscar(int clave) const;
     void eliminar(int clave);

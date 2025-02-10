@@ -3,15 +3,19 @@
 #include <string>  
 #include <vector>
 #include <utility>
+#include <list>
 
 class tabladispersion {
 private:
     static const int TABLE_SIZE = 10007;
-    std::vector<std::pair<int, std::string>> tabla;
+    std::vector<std::list<std::pair<int, std::string>>> tabla; 
+
+    
+    int hashFuncion(int clave) const;
 public:
     tabladispersion();
 
-    void insertar(int clave, std::string valor);
+    void insertar(int clave, const std::string& valor);
     std::string buscar(int clave) const;
     void eliminar(int clave);
 };
