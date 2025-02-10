@@ -1,17 +1,20 @@
 #include "../include/cliente.h"
+#include "../include/archivobinario.h"
 
 cliente::cliente(): idCliente(0), nombre(""), telefono(""), correo(""), saldo(0), historialCompras("")
 {
 }
 
-cliente::cliente(int, string, string, string, double, string)
+cliente::cliente(int id, string nombre, string telefono, string correo, double saldo, string historial)
 {
-    this -> idCliente = idCliente;
+    archivobinario archivo("clientes.txt");
+    this -> idCliente = id;
     this -> nombre = nombre;
     this -> telefono = telefono;
     this -> correo = correo;
     this -> saldo = saldo;
-    this -> historialCompras = historialCompras;
+    this -> historialCompras = historial;
+    archivo.aggcliente(id,nombre,telefono,correo,saldo,historial);
 }
 
 /*cliente::cliente(int,string, string, string, string, string, string, string, string, string)

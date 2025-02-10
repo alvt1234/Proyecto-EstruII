@@ -10,10 +10,10 @@ class cliente {
         string correo;
         double saldo;
         string historialCompras;
-
+       
     public:
         cliente();
-        cliente(int, string, string, string, double, string);
+        cliente(int id, string nombre, string telefono, string correo, double saldo, string historial);
 
         void setIdCliente(int);
         void setNombre(string);

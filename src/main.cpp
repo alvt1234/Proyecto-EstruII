@@ -6,6 +6,7 @@
 #include "../include/producto.h"
 #include "../include/pedido.h"
 #include "../include/empleado.h"
+#include "../include/archivobinario.h"
 using namespace std; 
 
 
@@ -273,7 +274,7 @@ void gestionarPedidos() {
 
 int main(){
     int opcion;
-
+    
     while (true){
     cout << "*************************************************\n";
     cout << "*                                               *\n";
