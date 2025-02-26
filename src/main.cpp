@@ -116,6 +116,8 @@ void gestionarInventarios() {
 void gestionarClientes() {
     cout << "Gestión de Clientes:\n";
     cout << "1. Agregar cliente\n";
+    cout<<"2. Buscar Cliente"<<endl;
+    cout<<"3. Eliminar Cliente"<<endl;
     cout << "0. Regresar al menú principal\n";
     
     int opcion;
@@ -142,17 +144,47 @@ void gestionarClientes() {
             cin.ignore(); 
             getline(cin, historialCompras);
 
-          
-            cliente cli(id, nombre, correo, telefono, saldo, historialCompras);
+           archivobinario archivo ("clientes.txt");
+           archivo.aggcliente(id, nombre, correo, telefono, saldo, historialCompras);
+           // cliente cli(id, nombre, correo, telefono, saldo, historialCompras);
             cout << "Cliente agregado.\n";
             break;
         }
+
+        case 2:
+        {
+        cout<<"Buscar Cliente"<<endl;
+        string nombre, correo,historialCompras;
+        int id;
+        double saldo;
+        string telefono;
+        cout<<"Ingrese el nombre a buscar: ";
+        cin>>nombre;
+        cout<<"Cliente encontrado\n";
+        cout<<"----------------------------------"<<endl;
+        archivobinario archivo ("clientes.txt");
+       // ali tenes que hacer eso-> cliente cli = archivo.buscarcliente(nombre);
+    
+        
+        
+        break;
+    }
+
+
+    case 3: {
+        int id;
+        cout<<"Ingrese el id del cliente para eliminar el cliente :"<<endl;
+        cin>>id;
+        cout<<"CLIENTE ELIMINADO"<<endl;
+    }
+
         
         case 0:
             return;
         default:
             cout << "Opción no válida.\n";
     }  
+
 }
 
 
