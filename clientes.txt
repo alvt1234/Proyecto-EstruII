@@ -1,3 +1,0 @@
-ID: 1212, Cliente: dwed, Telefono: wwew, Correo: 232, Saldo: 2323.000000, Historial: 232
-ID: 1293, Cliente: Ana, Telefono: ashqws, Correo: 31231, Saldo: 212.000000, Historial: 121
-ID: 0, Cliente: Iris, Telefono: Irisgale@gmail.com, Correo: 8976543, Saldo: 700.000000, Historial: 6777

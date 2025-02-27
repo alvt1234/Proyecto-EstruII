@@ -6,14 +6,14 @@
 #include "../include/producto.h"
 #include "../include/pedido.h"
 #include "../include/empleado.h"
-//#include "../include/archivobinario.h"
+#include "../include/archivobinario.h"
 #include "../include/arbolB.h"  
 
 using namespace std; 
 
 arbolB empleados(3);  //arbolB para empleados de grado 3
 arbolB productos(3);  //arbolB para productos de grado 3
-
+ArchivoBinario archivo;
 
 void Empleados() {
     cout << "Gestión de Empleados:\n";
@@ -80,9 +80,21 @@ void gestionarInventarios() {
 
     switch (opcion) {
         case 1: {  
-            int id;
+            int id,categoria,cantidad;
+            double precio;
+            string nombre,estado;
             cout << "Ingrese ID del producto: ";
             cin >> id;
+            cout<<" Nombre producto: ";
+            cin >>nombre;
+            cout <<" Categoria: ";
+            cin>> categoria;
+            cout << "Precio: ";
+            cin>> precio;
+            cout << "Cantidad: ";
+            cin>> cantidad;
+            cout<< "Estado: ";
+            cin>> estado;
             productos.insertar(id); // 🔹 Agregar al Árbol B
             cout << "Producto con ID " << id << " agregado.\n";
             break;
@@ -93,6 +105,7 @@ void gestionarInventarios() {
             cin >> id;
             if (productos.buscar(id)) {
                 cout << "Producto con ID " << id << " encontrado.\n";
+
             } else {
                 cout << "Producto con ID " << id << " NO encontrado.\n";
             }
@@ -122,6 +135,7 @@ void gestionarInventarios() {
 void gestionarClientes() {
     cout << "Gestión de Clientes:\n";
     cout << "1. Agregar cliente\n";
+    cout << "2. Buscar cliente\n";
     cout << "0. Regresar al menú principal\n";
     
     int opcion;
@@ -129,6 +143,7 @@ void gestionarClientes() {
     
     switch (opcion) {
         case 1: {
+            
             int id;
             string nombre, correo, telefono, historialCompras;
             double saldo;
@@ -147,13 +162,17 @@ void gestionarClientes() {
             cout << "Ingrese historial de compras: ";
             cin.ignore(); 
             getline(cin, historialCompras);
-
           
             cliente cli(id, nombre, correo, telefono, saldo, historialCompras);
-            cout << "Cliente agregado.\n";
+            
+            archivo.aggCliente(cli);
             break;
         }
-        
+        case 2: {
+            cout<<"====Buscar Cliente===";
+            break;
+        }
+            
         case 0:
             return;
         default:
