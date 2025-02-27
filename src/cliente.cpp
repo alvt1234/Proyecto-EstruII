@@ -7,14 +7,14 @@ cliente::cliente(): idCliente(0), nombre(""), telefono(""), correo(""), saldo(0)
 
 cliente::cliente(int id, string nombre, string telefono, string correo, double saldo, string historial)
 {
-    archivobinario archivo("clientes.txt");
+    //archivobinario archivo("clientes.txt");
     this -> idCliente = id;
     this -> nombre = nombre;
     this -> telefono = telefono;
     this -> correo = correo;
     this -> saldo = saldo;
     this -> historialCompras = historial;
-    archivo.aggcliente(id,nombre,telefono,correo,saldo,historial);
+    //archivo.aggcliente(id,nombre,telefono,correo,saldo,historial);
 }
 
 /*cliente::cliente(int,string, string, string, string, string, string, string, string, string)
