@@ -6,47 +6,57 @@
 #include "../include/producto.h"
 #include "../include/pedido.h"
 #include "../include/empleado.h"
-#include "../include/archivobinario.h"
+//#include "../include/archivobinario.h"
+#include "../include/arbolB.h"  
+
 using namespace std; 
+
+arbolB empleados(3);  //arbolB para empleados de grado 3
+arbolB productos(3);  //arbolB para productos de grado 3
 
 
 void Empleados() {
     cout << "Gestión de Empleados:\n";
     cout << "1. Agregar empleado\n";
-    cout << "2. Eliminar empleado\n";
+    cout << "2. Buscar empleado\n";
+    cout << "3. Eliminar empleado\n";
+    cout << "4. Mostrar empleados\n";
     cout << "0. Regresar al menú principal\n";
-    
+
     int opcion;
     cin >> opcion;
-    
-    switch (opcion) {
-        case 1: {
-            int id;
-            string nombre, departamento, puesto, estado;
-            double salario;
-            cout << "Ingrese ID: ";
-            cin >> id;
-            cout << "Ingrese nombre: ";
-            cin.ignore(); 
-            getline(cin, nombre);
-            cout << "Ingrese departamento: ";
-            getline(cin, departamento);
-            cout << "Ingrese puesto: ";
-            getline(cin, puesto);
-            cout << "Ingrese salario: ";
-            cin >> salario;
-            cout << "Ingrese estado (activo/inactivo): ";
-            cin >> estado;
 
-            empleado emp(id, nombre, departamento, puesto, salario, estado);
-            cout << "Empleado agregado.\n";
+    switch (opcion) {
+        case 1: {  // Agregar empleado
+            int id;
+            cout << "Ingrese ID del empleado: ";
+            cin >> id;
+            empleados.insertar(id); // 🔹 Agregar al Árbol B
+            cout << "Empleado con ID " << id << " agregado.\n";
             break;
         }
-        case 2: {
+        case 2: {  // Buscar empleado
+            int id;
+            cout << "Ingrese ID del empleado a buscar: ";
+            cin >> id;
+            if (empleados.buscar(id)) {
+                cout << "Empleado con ID " << id << " encontrado.\n";
+            } else {
+                cout << "Empleado con ID " << id << " NO encontrado.\n";
+            }
+            break;
+        }
+        case 3: {  // Eliminar empleado
             int id;
             cout << "Ingrese ID del empleado a eliminar: ";
             cin >> id;
-            cout << "Empleado eliminado\n";
+            empleados.eliminar(id);
+            cout << "Empleado con ID " << id << " eliminado.\n";
+            break;
+        }
+        case 4: {  // Mostrar empleados
+            cout << "Lista de empleados en orden: ";
+            empleados.recorrer();
             break;
         }
         case 0:
@@ -62,47 +72,43 @@ void gestionarInventarios() {
     cout << "1. Agregar producto\n";
     cout << "2. Buscar producto\n";
     cout << "3. Eliminar producto\n";
+    cout << "4. Mostrar productos\n";
     cout << "0. Regresar al menú principal\n";
-    
+
     int opcion;
     cin >> opcion;
-    
+
     switch (opcion) {
-        case 1: {
+        case 1: {  
             int id;
-            string nombre, categoria, estado;
-            double precio;
-            int cantidad;
             cout << "Ingrese ID del producto: ";
             cin >> id;
-            cout << "Ingrese nombre del producto: ";
-            cin.ignore(); 
-            getline(cin, nombre);
-            cout << "Ingrese categoría: ";
-            getline(cin, categoria);
-            cout << "Ingrese precio: ";
-            cin >> precio;
-            cout << "Ingrese cantidad en stock: ";
-            cin >> cantidad;
-            cout << "Ingrese estado (disponible/discontinuado): ";
-            cin >> estado;
-
-            producto prod(id, nombre, categoria, precio, cantidad, estado);
-            cout << "Producto agregado.\n";
+            productos.insertar(id); // 🔹 Agregar al Árbol B
+            cout << "Producto con ID " << id << " agregado.\n";
             break;
         }
-        case 2: {
+        case 2: {  
             int id;
             cout << "Ingrese ID del producto a buscar: ";
             cin >> id;
-            cout << "Producto encontrado (simulado).\n";
+            if (productos.buscar(id)) {
+                cout << "Producto con ID " << id << " encontrado.\n";
+            } else {
+                cout << "Producto con ID " << id << " NO encontrado.\n";
+            }
             break;
         }
-        case 3: {
+        case 3: {  
             int id;
             cout << "Ingrese ID del producto a eliminar: ";
             cin >> id;
-            cout << "Producto eliminado.\n";
+            productos.eliminar(id);
+            cout << "Producto con ID " << id << " eliminado.\n";
+            break;
+        }
+        case 4: {  
+            cout << "Lista de productos en orden: ";
+            productos.recorrer();
             break;
         }
         case 0:
