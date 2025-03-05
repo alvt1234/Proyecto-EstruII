@@ -8,12 +8,15 @@
 #include "../include/empleado.h"
 #include "../include/archivobinario.h"
 #include "../include/arbolB.h"  
-
+#include "../include/tabladispersion.h" 
 using namespace std; 
 
 arbolB empleados(3);  //arbolB para empleados de grado 3
 arbolB productos(3);  //arbolB para productos de grado 3
 ArchivoBinario archivo;
+tabladispersion clientes;
+tabladispersion pedidos;
+
 
 void Empleados() {
     cout << "Gestión de Empleados:\n";
@@ -131,11 +134,11 @@ void gestionarInventarios() {
     }
 }
 
-
 void gestionarClientes() {
     cout << "Gestión de Clientes:\n";
     cout << "1. Agregar cliente\n";
     cout << "2. Buscar cliente\n";
+    cout << "3. Eliminar cliente\n";
     cout << "0. Regresar al menú principal\n";
     
     int opcion;
@@ -143,7 +146,6 @@ void gestionarClientes() {
     
     switch (opcion) {
         case 1: {
-            
             int id;
             string nombre, correo, telefono, historialCompras;
             double saldo;
@@ -151,7 +153,7 @@ void gestionarClientes() {
             cout << "Ingrese ID del cliente: ";
             cin >> id;
             cout << "Ingrese nombre del cliente: ";
-            cin.ignore();  
+            cin.ignore();
             getline(cin, nombre);
             cout << "Ingrese correo: ";
             getline(cin, correo);
@@ -160,19 +162,37 @@ void gestionarClientes() {
             cout << "Ingrese saldo: ";
             cin >> saldo;
             cout << "Ingrese historial de compras: ";
-            cin.ignore(); 
+            cin.ignore();
             getline(cin, historialCompras);
           
-            cliente cli(id, nombre, correo, telefono, saldo, historialCompras);
-            
-            archivo.aggCliente(cli);
+            // Creamos un resumen de la información del cliente
+            string info = "Nombre: " + nombre + ", Correo: " + correo + 
+                          ", Tel: " + telefono + ", Saldo: " + to_string(saldo) +
+                          ", Historial: " + historialCompras;
+            // Insertamos en la tabla de dispersión
+            clientes.insertar(id, info);
+            cout << "Cliente agregado.\n";
             break;
         }
         case 2: {
-            cout<<"====Buscar Cliente===";
+            int id;
+            cout << "Ingrese ID del cliente a buscar: ";
+            cin >> id;
+            string resultado = clientes.buscar(id);
+            if (resultado != "No encontrado")
+                cout << "Cliente encontrado: " << resultado << endl;
+            else
+                cout << "Cliente no encontrado.\n";
             break;
         }
-            
+        case 3: {
+            int id;
+            cout << "Ingrese ID del cliente a eliminar: ";
+            cin >> id;
+            clientes.eliminar(id);
+            cout << "Cliente eliminado.\n";
+            break;
+        }
         case 0:
             return;
         default:
@@ -233,8 +253,6 @@ void gestionarVentas() {
     }
 
 }
-
-
 void gestionarPedidos() {
     cout << "Gestión de Pedidos:\n";
     cout << "1. Realizar pedido\n";
@@ -256,11 +274,11 @@ void gestionarPedidos() {
             cout << "Ingrese ID del cliente: ";
             cin >> idCliente;
 
-            cout << "Cantidad de productos a pedir:  ";
+            cout << "Cantidad de productos a pedir: ";
             cin >> cantidadProductos;
             for (int i = 0; i < cantidadProductos; ++i) {
                 int idProducto;
-                cout << "Ingrese ID del producto " << i + 1 << ": "; // i + 1 para mostrar el número de producto
+                cout << "Ingrese ID del producto " << i + 1 << ": ";
                 cin >> idProducto;
                 productosSolicitados.push_back(idProducto);
             }
@@ -272,22 +290,33 @@ void gestionarPedidos() {
             string estado;
             cout << "Ingrese el estado del pedido (pendiente/procesado/enviado): ";
             cin >> estado;
-            pedido ped(idPedido, idCliente, productosSolicitados, fechaEntrega, estado);
-            cout << "Pedido hecho.\n";
+            
+            // Creamos un resumen del pedido que incluya datos relevantes
+            string pedidoInfo = "ID Cliente: " + to_string(idCliente) + 
+                                ", Fecha: " + fechaEntrega + 
+                                ", Estado: " + estado;
+            // Insertamos el pedido en la tabla de dispersión
+            pedidos.insertar(idPedido, pedidoInfo);
+            cout << "Pedido registrado.\n";
             break;
         }
         case 2: {
             int id;
             cout << "Ingrese ID del pedido a buscar: ";
             cin >> id;
-            cout << "Pedido encontrado\n";
+            string resultado = pedidos.buscar(id);
+            if (resultado != "No encontrado")
+                cout << "Pedido encontrado: " << resultado << endl;
+            else
+                cout << "Pedido no encontrado.\n";
             break;
         }
         case 3: {
             int id;
             cout << "Ingrese ID del pedido a eliminar: ";
             cin >> id;
-            cout << "Pedido eliminado\n";
+            pedidos.eliminar(id);
+            cout << "Pedido eliminado.\n";
             break;
         }
         case 0:
