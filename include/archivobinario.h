@@ -5,6 +5,7 @@
 #include "tabladispersion.h"
 #include "producto.h"
 #include "pedido.h"
+#include "empleado.h"
 using namespace std;
 
 class ArchivoBinario {
@@ -16,7 +17,8 @@ public:
         std::ofstream archivo("clientes.bin", std::ios::binary | std::ios::app);  
         std::ofstream archivoProducto("Productos.bin", std::ios::binary | std::ios::app);  
         std::ofstream archivoPedidos("pedidos.bin", std::ios::binary | std::ios::app);  
-        if (!archivo || !archivoProducto || !archivoPedidos) {
+        std::ofstream archivoEmpleados("empleados.bin", std::ios::binary | std::ios::app); 
+        if (!archivo || !archivoProducto || !archivoPedidos || !archivoEmpleados) {
             std::cerr << "Error al abrir el archivo clientes.bin" << std::endl;
         }
         archivo.close(); 
@@ -32,4 +34,6 @@ public:
     bool verificarIDproducto(int id);
     void pedidos(pedido ped);
     bool verificarIDpedido(int id);
+    void aggEmpleado(empleado e);
+    bool verificarIDempleado(int id);
 };

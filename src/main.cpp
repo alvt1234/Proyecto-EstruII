@@ -33,8 +33,25 @@ void Empleados() {
     switch (opcion) {
         case 1: {  // Agregar empleado
             int id;
+            string nombre, departamento, puesto,estado;
+            double sueldo;
             cout << "Ingrese ID del empleado: ";
             cin >> id;
+            if(archivo.verificarIDempleado(id)){
+                break;
+            }
+            cout << "Ingrese nombre del empleado: ";
+            cin >> nombre;
+            cout << "Ingrese departamento del empleado: ";
+            cin >> departamento;
+            cout << "Ingrese puesto del empleado: ";
+            cin >> puesto;
+            cout << "Ingrese estado del empleado: ";
+            cin >> estado;
+            cout << "Ingrese sueldo del empleado: ";
+            cin >> sueldo;
+            empleado emp(id,nombre,departamento,puesto,sueldo,estado);
+            archivo.aggEmpleado(emp);            
             empleados.insertar(id); // 🔹 Agregar al Árbol B
             cout << "Empleado con ID " << id << " agregado.\n";
             break;

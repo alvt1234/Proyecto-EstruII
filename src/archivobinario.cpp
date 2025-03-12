@@ -161,6 +161,7 @@ bool ArchivoBinario::verificarIDproducto(int id)
         archivo.close();
     return false;
 }
+
 void ArchivoBinario::pedidos(pedido ped) {
     int idpedido = ped.getIdPedido();
     int idcliente = ped.getIdCliente();  
@@ -229,5 +230,64 @@ bool ArchivoBinario::verificarIDpedido(int id)
     }
 
     archivo.close();
+    return false;
+}
+
+void ArchivoBinario::aggEmpleado(empleado e)
+{
+    int id = e.getid();
+    char nombre[50], departamento[50], estado[50], puesto[50];
+    double sueldo;
+
+    strncpy(nombre, e.getnombre().c_str(), sizeof(nombre) - 1);
+    nombre[sizeof(nombre) - 1] = '\0';  
+    strncpy(departamento, e.getdepartamento().c_str(), sizeof(departamento) - 1);
+    departamento[sizeof(departamento) - 1] = '\0'; 
+    strncpy(estado, e.getestado().c_str(), sizeof(estado) - 1);
+    estado[sizeof(estado) - 1] = '\0'; 
+    strncpy(puesto, e.getpuesto().c_str(), sizeof(puesto) - 1);
+    puesto[sizeof(puesto) - 1] = '\0'; 
+
+    std::ofstream archivo("empleados.bin", std::ios::out | std::ios::binary | std::ios::app);
+
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de empleados para agregar datos.\n";
+        return;
+    }
+
+    archivo.write(reinterpret_cast<char*>(&id), sizeof(int));
+    archivo.write(nombre, sizeof(nombre));
+    archivo.write(departamento, sizeof(departamento));
+    archivo.write(puesto, sizeof(puesto));
+    archivo.write(reinterpret_cast<char*>(&sueldo), sizeof(double));
+    archivo.write(estado, sizeof(estado));
+
+    archivo.close();
+    std::cout << "Cliente guardado correctamente.\n";
+}
+
+bool ArchivoBinario::verificarIDempleado(int id)
+{
+    std::ifstream archivo("empleados.bin", std::ios::in | std::ios::binary);
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de productos para verificar datos.\n";
+        return false;
+        }
+        int idempleados;
+        char nombre[50], departamento[50], puesto[100], estado[50];
+        double salario;
+        while (archivo.read(reinterpret_cast<char*>(&idempleados), sizeof(int))) {
+            archivo.read(nombre, sizeof(nombre));
+            archivo.read(departamento, sizeof(departamento));
+            archivo.read(puesto, sizeof(puesto));
+            archivo.read(reinterpret_cast<char*>(&salario), sizeof(double));
+            archivo.read(estado, sizeof(estado));
+            if (idempleados == id) {
+                cout<<"ID EMPLEADO EXISTENTE\n";
+                archivo.close();
+                return true;
+                }
+        }
+        archivo.close();
     return false;
 }

@@ -1,3 +1,6 @@
+#ifndef EMPLEADO_H
+#define EMPLEADO_H
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -33,3 +36,4 @@ class empleado {
     void setestado(string estado);
 
 };
+#endif // EMPLEADO_H
