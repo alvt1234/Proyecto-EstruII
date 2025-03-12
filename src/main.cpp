@@ -18,6 +18,7 @@ tabladispersion clientes;
 tabladispersion pedidos;
 
 
+
 void Empleados() {
     cout << "Gestión de Empleados:\n";
     cout << "1. Agregar empleado\n";
@@ -83,11 +84,14 @@ void gestionarInventarios() {
 
     switch (opcion) {
         case 1: {  
-            int id,categoria,cantidad;
+            int id,cantidad;
             double precio;
-            string nombre,estado;
+            string nombre,estado,categoria;
             cout << "Ingrese ID del producto: ";
             cin >> id;
+            if(archivo.verificarIDproducto(id)){
+                break;
+            }
             cout<<" Nombre producto: ";
             cin >>nombre;
             cout <<" Categoria: ";
@@ -100,6 +104,8 @@ void gestionarInventarios() {
             cin>> estado;
             productos.insertar(id); // 🔹 Agregar al Árbol B
             cout << "Producto con ID " << id << " agregado.\n";
+            producto nuevoproducto(id,nombre,categoria,precio,cantidad,estado);
+            archivo.aggproducto(nuevoproducto);
             break;
         }
         case 2: {  
@@ -276,15 +282,25 @@ void gestionarPedidos() {
 
             cout << "Ingrese ID del pedido: ";
             cin >> idPedido;
+            if(archivo.verificarIDpedido(idPedido)){
+                break;
+            }
             cout << "Ingrese ID del cliente: ";
             cin >> idCliente;
-
+            if(!archivo.verificarIDcliente(idCliente)){
+                cout << "El cliente no existe.\n";
+                break;
+            }
             cout << "Cantidad de productos a pedir: ";
             cin >> cantidadProductos;
             for (int i = 0; i < cantidadProductos; ++i) {
                 int idProducto;
                 cout << "Ingrese ID del producto " << i + 1 << ": ";
                 cin >> idProducto;
+                if(!archivo.verificarIDproducto(idProducto)){
+                    cout << "El producto no existe.\n";
+                    i--;
+                }else
                 productosSolicitados.push_back(idProducto);
             }
 
@@ -296,12 +312,13 @@ void gestionarPedidos() {
             cout << "Ingrese el estado del pedido (pendiente/procesado/enviado): ";
             cin >> estado;
             
-            // Creamos un resumen del pedido que incluya datos relevantes
             string pedidoInfo = "ID Cliente: " + to_string(idCliente) + 
                                 ", Fecha: " + fechaEntrega + 
                                 ", Estado: " + estado;
             // Insertamos el pedido en la tabla de dispersión
             pedidos.insertar(idPedido, pedidoInfo);
+            pedido pedido(idPedido,idCliente,productosSolicitados,fechaEntrega,estado);
+            archivo.pedidos(pedido);
             cout << "Pedido registrado.\n";
             break;
         }

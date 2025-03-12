@@ -3,6 +3,8 @@
 #include <cstring>
 #include "cliente.h"
 #include "tabladispersion.h"
+#include "producto.h"
+#include "pedido.h"
 using namespace std;
 
 class ArchivoBinario {
@@ -12,10 +14,11 @@ private:
 public:
     ArchivoBinario() {
         std::ofstream archivo("clientes.bin", std::ios::binary | std::ios::app);  
-        if (!archivo) {
+        std::ofstream archivoProducto("Productos.bin", std::ios::binary | std::ios::app);  
+        std::ofstream archivoPedidos("pedidos.bin", std::ios::binary | std::ios::app);  
+        if (!archivo || !archivoProducto || !archivoPedidos) {
             std::cerr << "Error al abrir el archivo clientes.bin" << std::endl;
         }
-        // El archivo se abre en modo "append" para no sobrescribir los datos existentes
         archivo.close(); 
     }
 
@@ -25,4 +28,8 @@ public:
     void aggCliente(cliente c);
     bool verificarIDcliente(int id);
     void cargarClientes(tabladispersion& clientes);
+    void aggproducto(producto p);
+    bool verificarIDproducto(int id);
+    void pedidos(pedido ped);
+    bool verificarIDpedido(int id);
 };

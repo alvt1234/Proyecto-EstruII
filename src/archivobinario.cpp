@@ -3,7 +3,7 @@
 void ArchivoBinario::aggCliente(cliente c) {
     int id = c.getIdCliente();
     char nombre[50], telefono[15], correo[50], historial[100];
-    double saldo = c.getSaldo();
+    double saldo;
 
     // Usamos strncpy para evitar desbordamiento de búfer y aseguramos que se
     // agregue el terminador nulo al final de las cadenas.
@@ -64,7 +64,9 @@ bool ArchivoBinario::verificarIDcliente(int id) {
 
     archivo.close();
     return false;
-}void ArchivoBinario::cargarClientes(tabladispersion& clientes) {
+}
+
+void ArchivoBinario::cargarClientes(tabladispersion& clientes) {
     std::ifstream archivo("clientes.bin", std::ios::in | std::ios::binary);  
     if (!archivo) {
         std::cerr << "No se pudo abrir el archivo de clientes para lectura.\n";
@@ -97,4 +99,135 @@ bool ArchivoBinario::verificarIDcliente(int id) {
     }
 
     archivo.close();
+}
+
+void ArchivoBinario::aggproducto(producto p)
+{
+    int idproducto=p.getid(),cantidad;
+    char nombre[50], categoria[50], estado[100];
+    double precio;
+
+    strncpy(nombre, p.getnombre().c_str(), sizeof(nombre) - 1);
+    nombre[sizeof(nombre) - 1] = '\0';  // Aseguramos el terminador nulo
+    strncpy(categoria, p.getcategoria().c_str(), sizeof(categoria) - 1);
+    categoria[sizeof(categoria) - 1] = '\0'; 
+    strncpy(estado, p.getestado().c_str(), sizeof(estado) - 1);
+    estado[sizeof(estado) - 1] = '\0'; 
+    
+    std::ofstream archivo("Productos.bin", std::ios::out | std::ios::binary | std::ios::app);
+
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de clientes para agregar datos.\n";
+        return;
+    }
+
+     // Escribimos los datos en binario
+     archivo.write(reinterpret_cast<char*>(&idproducto), sizeof(int));
+     archivo.write(nombre, sizeof(nombre));
+     archivo.write(categoria, sizeof(categoria));
+     archivo.write(reinterpret_cast<char*>(&precio), sizeof(double));
+     archivo.write(reinterpret_cast<char*>(&cantidad), sizeof(int));
+     archivo.write(estado, sizeof(estado));
+ 
+     archivo.close();
+     std::cout << "Producto agregado correctamente.\n";
+ 
+
+}
+
+bool ArchivoBinario::verificarIDproducto(int id)
+{
+    std::ifstream archivo("Productos.bin", std::ios::in | std::ios::binary);
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de productos para verificar datos.\n";
+        return false;
+        }
+        int idproducto;
+        char nombre[50], categoria[50], estado[100];
+        double precio;
+        int cantidad;
+        while (archivo.read(reinterpret_cast<char*>(&idproducto), sizeof(int))) {
+            archivo.read(nombre, sizeof(nombre));
+            archivo.read(categoria, sizeof(categoria));
+            archivo.read(reinterpret_cast<char*>(&precio), sizeof(double));
+            archivo.read(reinterpret_cast<char*>(&cantidad), sizeof(int));
+            archivo.read(estado, sizeof(estado));
+            if (idproducto == id) {
+                cout<<"ID PRODUCTO EXISTENTE\n";
+                archivo.close();
+                return true;
+                }
+        }
+        archivo.close();
+    return false;
+}
+void ArchivoBinario::pedidos(pedido ped) {
+    int idpedido = ped.getIdPedido();
+    int idcliente = ped.getIdCliente();  
+    std::vector<int> productosSolicitados = ped.getProductosSolicitados(); 
+    char fecha[50], estado[50];
+
+   
+    strncpy(fecha, ped.getFechaEntrega().c_str(), sizeof(fecha) - 1);
+    fecha[sizeof(fecha) - 1] = '\0';  
+
+    strncpy(estado, ped.getEstado().c_str(), sizeof(estado) - 1);
+    estado[sizeof(estado) - 1] = '\0'; 
+
+    std::ofstream archivo("pedidos.bin", std::ios::out | std::ios::binary | std::ios::app);
+
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de pedidos para agregar datos.\n";
+        return;
+    }
+
+    archivo.write(reinterpret_cast<char*>(&idpedido), sizeof(int));
+    archivo.write(reinterpret_cast<char*>(&idcliente), sizeof(int));
+    archivo.write(fecha, sizeof(fecha));
+    archivo.write(estado, sizeof(estado));
+
+    int cantidadProductos = productosSolicitados.size();
+    archivo.write(reinterpret_cast<char*>(&cantidadProductos), sizeof(int));
+
+    for (int idProducto : productosSolicitados) {
+        archivo.write(reinterpret_cast<char*>(&idProducto), sizeof(int));
+    }
+
+    archivo.close();
+    std::cout << "Pedido guardado correctamente.\n";
+}
+
+bool ArchivoBinario::verificarIDpedido(int id)
+{
+    std::ifstream archivo("pedidos.bin", std::ios::in | std::ios::binary);
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de pedidos para verificar datos.\n";
+        return false;
+    }
+
+    int idpedido, idcliente, numProductos;
+    char fecha[50], estado[50];
+
+    while (archivo.read(reinterpret_cast<char*>(&idpedido), sizeof(int))) {
+        archivo.read(reinterpret_cast<char*>(&idcliente), sizeof(int));
+        archivo.read(reinterpret_cast<char*>(&numProductos), sizeof(int));
+        vector<int> productosSolicitados(numProductos);
+        for (int i = 0; i < numProductos; ++i) {
+            archivo.read(reinterpret_cast<char*>(&productosSolicitados[i]), sizeof(int));
+        }
+        archivo.read(fecha, sizeof(fecha));
+        fecha[sizeof(fecha) - 1] = '\0';  
+
+        archivo.read(estado, sizeof(estado));
+        estado[sizeof(estado) - 1] = '\0';
+
+        if (idpedido == id) {
+            std::cout << "ID PEDIDO EXISTENTE\n";
+            archivo.close();
+            return true;
+        }
+    }
+
+    archivo.close();
+    return false;
 }

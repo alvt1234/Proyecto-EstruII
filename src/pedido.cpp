@@ -2,6 +2,7 @@
 
 pedido::pedido() {}
 
+//¿Porque los productos solicitados es un vector?, es la cantidad?, o es espacificar cada producto?
 pedido::pedido(int idPedido, int idCliente, std::vector<int> productosSolicitados, std::string fechaEntrega, std::string estado) {
     this->idPedido = idPedido;
     this->idCliente = idCliente;

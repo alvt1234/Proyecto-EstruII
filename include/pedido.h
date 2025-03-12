@@ -1,3 +1,5 @@
+#ifndef PEDIDO_H
+#define PEDIDO_H
 #include <vector>
 #include <string>
 using namespace std; 
@@ -27,5 +29,6 @@ public:
     void setFechaEntrega(std::string fechaEntrega);
     void setEstado(std::string estado);
 };
+#endif
 
 
