@@ -289,3 +289,80 @@ bool ArchivoBinario::verificarIDempleado(int id)
         archivo.close();
     return false;
 }
+
+void ArchivoBinario::ventas(venta v)
+{
+    int idventas=v.getIdVenta();
+    int idcliente=v.getIdVenta();
+    vector<int> productosvendidos=v.getProductosVendidos();
+    vector<int> cantidad=v.getCantidades();
+    char fecha[50];
+    double total=v.getTotal();
+
+    strncpy(fecha, v.getFecha().c_str(), sizeof(fecha) - 1);
+    fecha[sizeof(fecha) - 1] = '\0';  // Aseguramos el terminador nulo
+    std::ofstream archivo("ventas.bin", std::ios::out | std::ios::binary | std::ios::app);
+
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de clientes para agregar datos.\n";
+        return;
+    }
+
+    archivo.write(reinterpret_cast<char*>(&idventas), sizeof(int));
+    archivo.write(reinterpret_cast<char*>(&idcliente), sizeof(int));
+    archivo.write(fecha, sizeof(fecha));
+
+    int cantidadProductos = productosvendidos.size();
+    archivo.write(reinterpret_cast<char*>(&cantidadProductos), sizeof(int));
+
+    for (int idProducto : productosvendidos) {
+        archivo.write(reinterpret_cast<char*>(&idProducto), sizeof(int));
+    }
+    int cantidadPro = cantidad.size();
+    archivo.write(reinterpret_cast<char*>(&cantidadPro), sizeof(int));
+
+    for (int idProducto : cantidad) {
+        archivo.write(reinterpret_cast<char*>(&idProducto), sizeof(int));
+    }
+    archivo.write(fecha, sizeof(fecha));
+    archivo.write(reinterpret_cast<char*>(&total), sizeof(double));
+    archivo.close();
+    std::cout << "Venta guardada correctamente.\n";    
+}
+
+bool ArchivoBinario::verificarIDventas(int id)
+{
+    std::ifstream archivo("ventas.bin", std::ios::in | std::ios::binary);
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de ventas para verificar datos.\n";
+        return false;
+    }
+
+    int idventas, idcliente, productosvendidos, cantidad;
+    char fecha[50];
+    double total;
+
+    while (archivo.read(reinterpret_cast<char*>(&idventas), sizeof(int))) {
+        archivo.read(reinterpret_cast<char*>(&idcliente), sizeof(int));
+        vector<int> productosSolicitados(productosvendidos);
+        for (int i = 0; i < productosvendidos; ++i) {
+            archivo.read(reinterpret_cast<char*>(&productosSolicitados[i]), sizeof(int));
+        }
+        vector<int> cantidadpr(cantidad);
+        for (int i = 0; i < cantidad; ++i) {
+            archivo.read(reinterpret_cast<char*>(&cantidadpr[i]), sizeof(int));
+        }
+        archivo.read(fecha, sizeof(fecha));
+        fecha[sizeof(fecha) - 1] = '\0';  
+        archivo.read(reinterpret_cast<char*>(&total), sizeof(double));
+       
+        if (idventas == id) {
+            std::cout << "ID VENTA EXISTENTE\n";
+            archivo.close();
+            return true;
+        }
+    }
+
+    archivo.close();
+    return false;
+}

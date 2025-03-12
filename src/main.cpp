@@ -87,7 +87,6 @@ void Empleados() {
     }
 }
 
-
 void gestionarInventarios() {
     cout << "Gestión de Inventarios:\n";
     cout << "1. Agregar producto\n";
@@ -228,7 +227,6 @@ void gestionarClientes() {
     }  
 }
 
-
 void gestionarVentas() {
     cout << "Gestión de Ventas:\n";
     cout << "1. Realizar venta\n";
@@ -245,9 +243,15 @@ void gestionarVentas() {
 
             cout << "Ingrese ID de la venta: ";
             cin >> idVenta;
+            if(archivo.verificarIDventas(idVenta)){
+                break;
+            }
             cout << "Ingrese ID del cliente: ";
             cin >> idCliente;
-
+            if(!archivo.verificarIDcliente(idCliente)){
+                cout<<"Cliente inexistente";
+                break;
+            }
             int cantidadProductos;
             cout << "¿Cuántos productos desea vender? ";
             cin >> cantidadProductos;
@@ -256,11 +260,17 @@ void gestionarVentas() {
                 int idProducto, cantidad;
                 cout << "Ingrese ID del producto " << i + 1 << ": ";
                 cin >> idProducto;
+                if(!archivo.verificarIDproducto(idProducto)){
+                    cout<<"Producto inexistente";
+                    i--;
+                    break;
+                }else{
                 productosVendidos.push_back(idProducto);
-
                 cout << "Ingrese cantidad de este producto: ";
                 cin >> cantidad;
                 cantidades.push_back(cantidad);
+                }
+                
             }
 
             double total;
@@ -268,9 +278,10 @@ void gestionarVentas() {
             cin >> total;
 
             string fecha;
-            cout << "Ingrese la fecha de la venta (año-mes-dia): ";
+            cout << "Ingrese la fecha de la venta (año/mes/dia): ";
             cin >> fecha;
             venta ven(idVenta, idCliente, productosVendidos, cantidades, total, fecha);
+            archivo.ventas(ven);
             cout << "Venta realizada.\n";
             break;
         }
