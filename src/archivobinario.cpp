@@ -2,11 +2,9 @@
 
 void ArchivoBinario::aggCliente(cliente c) {
     int id = c.getIdCliente();
-    char nombre[50], telefono[15], correo[50], historial[100];
-    double saldo;
+    char nombre[50], telefono[50], correo[50], historial[100];
+    double saldo=c.getSaldo();
 
-    // Usamos strncpy para evitar desbordamiento de búfer y aseguramos que se
-    // agregue el terminador nulo al final de las cadenas.
     strncpy(nombre, c.getNombre().c_str(), sizeof(nombre) - 1);
     nombre[sizeof(nombre) - 1] = '\0';  // Aseguramos el terminador nulo
     strncpy(telefono, c.getTelefono().c_str(), sizeof(telefono) - 1);
@@ -43,7 +41,7 @@ bool ArchivoBinario::verificarIDcliente(int id) {
     }
 
     int idcliente;
-    char nombre[50], telefono[15], correo[50], historial[100];
+    char nombre[50], telefono[50], correo[50], historial[100];
     double saldo;
 
     // Leemos los clientes en un ciclo hasta llegar al final del archivo

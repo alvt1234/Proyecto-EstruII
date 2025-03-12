@@ -190,7 +190,7 @@ void gestionarClientes() {
             cout << "Ingrese historial de compras: ";
             cin.ignore();
             getline(cin, historialCompras);
-            cliente nuevoCliente(id, nombre, correo, telefono, saldo, historialCompras);
+            cliente nuevoCliente(id, nombre, telefono, correo, saldo, historialCompras);
             archivo.aggCliente(nuevoCliente);
             // Creamos un resumen de la información del cliente
             string info = "Nombre: " + nombre + ", Correo: " + correo + 
