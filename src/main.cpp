@@ -152,6 +152,9 @@ void gestionarClientes() {
             
             cout << "Ingrese ID del cliente: ";
             cin >> id;
+            if(archivo.verificarIDcliente(id)){
+                break;
+            }
             cout << "Ingrese nombre del cliente: ";
             cin.ignore();
             getline(cin, nombre);
@@ -164,10 +167,11 @@ void gestionarClientes() {
             cout << "Ingrese historial de compras: ";
             cin.ignore();
             getline(cin, historialCompras);
-          
+            cliente nuevoCliente(id, nombre, correo, telefono, saldo, historialCompras);
+            archivo.aggCliente(nuevoCliente);
             // Creamos un resumen de la información del cliente
             string info = "Nombre: " + nombre + ", Correo: " + correo + 
-                          ", Tel: " + telefono + ", Saldo: " + to_string(saldo) +
+                          ", Telefono'-': " + telefono + ", Saldo: " + to_string(saldo) +
                           ", Historial: " + historialCompras;
             // Insertamos en la tabla de dispersión
             clientes.insertar(id, info);
@@ -176,6 +180,7 @@ void gestionarClientes() {
         }
         case 2: {
             int id;
+            
             cout << "Ingrese ID del cliente a buscar: ";
             cin >> id;
             string resultado = clientes.buscar(id);
@@ -328,7 +333,7 @@ void gestionarPedidos() {
 
 int main(){
     int opcion;
-    
+    archivo.cargarClientes(clientes);
     while (true){
     cout << "*************************************************\n";
     cout << "*                                               *\n";
