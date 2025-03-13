@@ -29,26 +29,29 @@ void Empleados() {
 
     int opcion;
     cin >> opcion;
-
+    int id;
+    string nombre, departamento, puesto,estado;
+    double sueldo;
     switch (opcion) {
         case 1: {  // Agregar empleado
             int id;
             string nombre, departamento, puesto,estado;
             double sueldo;
-            cout << "Ingrese ID del empleado: ";
+            cout << "Ingrese ID del empleado: \n";
             cin >> id;
             if(archivo.verificarIDempleado(id)){
                 break;
             }
-            cout << "Ingrese nombre del empleado: ";
-            cin >> nombre;
-            cout << "Ingrese departamento del empleado: ";
-            cin >> departamento;
-            cout << "Ingrese puesto del empleado: ";
-            cin >> puesto;
-            cout << "Ingrese estado del empleado: ";
-            cin >> estado;
-            cout << "Ingrese sueldo del empleado: ";
+            cout << "Ingrese nombre del empleado: \n";
+            cin.ignore();
+            getline(cin, nombre);
+            cout << "Ingrese departamento del empleado: " << endl;
+            getline(cin, departamento);
+            cout << "Ingrese puesto del empleado: \n";
+            getline(cin, puesto);
+            cout << "Ingrese estado del empleado: \n";
+            getline(cin, estado);
+            cout << "Ingrese sueldo del empleado: \n";
             cin >> sueldo;
             empleado emp(id,nombre,departamento,puesto,sueldo,estado);
             archivo.aggEmpleado(emp);            
@@ -61,7 +64,8 @@ void Empleados() {
             cout << "Ingrese ID del empleado a buscar: ";
             cin >> id;
             if (empleados.buscar(id)) {
-                cout << "Empleado con ID " << id << " encontrado.\n";
+                archivo.buscarEmpleado(empleados);
+               
             } else {
                 cout << "Empleado con ID " << id << " NO encontrado.\n";
             }
@@ -379,17 +383,19 @@ void gestionarPedidos() {
 int main(){
     int opcion;
     archivo.cargarClientes(clientes);
+    archivo.buscarEmpleado(empleados);
+    archivo.buscarpedido(pedidos);
     while (true){
     cout << "*************************************************\n";
     cout << "*                                               *\n";
-    cout << "*           Bienvenido al menú de gestión       *\n";
+    cout << "*         Bienvenido al menú de gestión       *\n";
     cout << "*                                               *\n";
     cout << "*************************************************\n";
     cout << "*                                               *\n";
-    cout << "*           Seleccione una opción:               *\n";
+    cout << "*           Seleccione una opción:              *\n";
     cout << "*                                               *\n";
-    cout << "* 1. Clientes                                    *\n";
-    cout << "* 2. Productos                                   *\n";
+    cout << "* 1. Clientes                                   *\n";
+    cout << "* 2. Productos                                  *\n";
     cout << "* 3. Pedidos                                    *\n";
     cout << "* 4. Empleados                                  *\n";
     cout << "* 5. Ventas                                     *\n";
@@ -407,6 +413,7 @@ int main(){
                 break;
             case 3:
                 gestionarPedidos();  
+                
                 break;
             case 4:
                 Empleados();  

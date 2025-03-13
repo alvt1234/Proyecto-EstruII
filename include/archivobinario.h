@@ -7,6 +7,7 @@
 #include "pedido.h"
 #include "empleado.h"
 #include "venta.h"
+#include "arbolB.h"
 using namespace std;
 
 class ArchivoBinario {
@@ -36,9 +37,10 @@ public:
     bool verificarIDproducto(int id);
     void pedidos(pedido ped);
     bool verificarIDpedido(int id);
+    void buscarpedido(tabladispersion& clientes);
     void aggEmpleado(empleado e);
     bool verificarIDempleado(int id);
     void ventas(venta v);
     bool verificarIDventas(int id);
-
+    void buscarEmpleado(arbolB& empleado);
 };

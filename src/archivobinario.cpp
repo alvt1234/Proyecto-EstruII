@@ -231,11 +231,51 @@ bool ArchivoBinario::verificarIDpedido(int id)
     return false;
 }
 
+void ArchivoBinario::buscarpedido(tabladispersion& clientes)
+{
+    std::ifstream archivo("pedidos.bin", std::ios::in | std::ios::binary);  
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de pedidos para lectura.\n";
+        return;
+    }
+
+    int idpedido, idcliente, productosS;
+    char fecha[50], estado[50];
+
+    while (archivo.read(reinterpret_cast<char*>(&idpedido), sizeof(int))) {
+        archivo.read(reinterpret_cast<char*>(&idcliente), sizeof(int));
+        archivo.read(reinterpret_cast<char*>(&productosS), sizeof(int)); 
+
+        std::vector<int> productosSolicitados(productosS); 
+        for (int i = 0; i < productosS; ++i) {
+            archivo.read(reinterpret_cast<char*>(&productosSolicitados[i]), sizeof(int));
+        }
+
+        archivo.read(fecha, sizeof(fecha));
+        archivo.read(estado, sizeof(estado));
+
+        fecha[sizeof(fecha) - 1] = '\0';
+        estado[sizeof(estado) - 1] = '\0';
+
+        std::string info = "ID CLIENTE: " + std::to_string(idcliente) + 
+                           ", Productos: ";
+        for (const auto& producto : productosSolicitados) {
+            info += std::to_string(producto) + " ";
+        }
+        info += ", Fecha: " + std::string(fecha) + ", Estado: " + std::string(estado);
+
+       clientes.insertar(idpedido, info);
+    }
+
+    archivo.close();  
+}
+
+
 void ArchivoBinario::aggEmpleado(empleado e)
 {
     int id = e.getid();
     char nombre[50], departamento[50], estado[50], puesto[50];
-    double sueldo;
+    double sueldo=e.getsalario();
 
     strncpy(nombre, e.getnombre().c_str(), sizeof(nombre) - 1);
     nombre[sizeof(nombre) - 1] = '\0';  
@@ -365,4 +405,40 @@ bool ArchivoBinario::verificarIDventas(int id)
 
     archivo.close();
     return false;
+}
+
+void ArchivoBinario::buscarEmpleado(arbolB& empleado)
+{
+    std::ifstream archivo("empleados.bin", std::ios::in | std::ios::binary);  
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de empleado para lectura.\n";
+        return;
+    }
+
+    int idempleado;
+    char nombre[50], departamento[50], puesto[50], estado[50];
+    double salario;
+
+    // Leemos los clientes en un ciclo hasta llegar al final del archivo
+    while (archivo.read(reinterpret_cast<char*>(&idempleado), sizeof(int))) {
+        archivo.read(nombre, sizeof(nombre));
+        archivo.read(departamento, sizeof(departamento));
+        archivo.read(puesto, sizeof(puesto));
+        archivo.read(reinterpret_cast<char*>(&salario), sizeof(double));
+        archivo.read(estado, sizeof(estado));
+
+        // Verifica si los datos fueron leídos correctamente
+        std::cout << "Empleado cargado: Nombre: " << nombre << ", Departamento: " << departamento 
+                  << ", puesto: " << puesto << ", salario: " << salario 
+                  << ", Estado: " << estado << std::endl;
+
+        std::string info = "Nombre: " + std::string(nombre) + ", Departamento: " + std::string(departamento) +
+                           ", Puesto: " + std::string(puesto) + ", Salario: " + std::to_string(salario) +
+                           ", Estado: " + std::string(estado);
+
+        // Insertamos el cliente en la tabla de dispersión
+        empleado.insertar(idempleado);
+    }
+
+    archivo.close();
 }
