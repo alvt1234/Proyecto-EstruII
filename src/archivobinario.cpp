@@ -333,40 +333,38 @@ bool ArchivoBinario::verificarIDempleado(int id)
 
 void ArchivoBinario::ventas(venta v)
 {
-    int idventas=v.getIdVenta();
-    int idcliente=v.getIdVenta();
-    vector<int> productosvendidos=v.getProductosVendidos();
-    vector<int> cantidad=v.getCantidades();
+    int idventas = v.getIdVenta();
+    int idcliente = v.getIdCliente();
+    double total = v.getTotal();
     char fecha[50];
-    double total=v.getTotal();
 
     strncpy(fecha, v.getFecha().c_str(), sizeof(fecha) - 1);
-    fecha[sizeof(fecha) - 1] = '\0';  // Aseguramos el terminador nulo
+    fecha[sizeof(fecha) - 1] = '\0'; 
+
+    vector<int> productosvendidos = v.getProductosVendidos();
+    vector<int> cantidades = v.getCantidades();
+
     std::ofstream archivo("ventas.bin", std::ios::out | std::ios::binary | std::ios::app);
 
     if (!archivo) {
-        std::cerr << "No se pudo abrir el archivo de clientes para agregar datos.\n";
+        std::cerr << "No se pudo abrir el archivo de ventas para agregar datos.\n";
         return;
     }
 
     archivo.write(reinterpret_cast<char*>(&idventas), sizeof(int));
     archivo.write(reinterpret_cast<char*>(&idcliente), sizeof(int));
+    archivo.write(reinterpret_cast<char*>(&total), sizeof(double));
     archivo.write(fecha, sizeof(fecha));
 
     int cantidadProductos = productosvendidos.size();
     archivo.write(reinterpret_cast<char*>(&cantidadProductos), sizeof(int));
 
-    for (int idProducto : productosvendidos) {
-        archivo.write(reinterpret_cast<char*>(&idProducto), sizeof(int));
+    for (size_t i = 0; i < productosvendidos.size(); i++) {
+        archivo.write(reinterpret_cast<char*>(&productosvendidos[i]), sizeof(int));
+        archivo.write(reinterpret_cast<char*>(&cantidades[i]), sizeof(int));
+      
     }
-    int cantidadPro = cantidad.size();
-    archivo.write(reinterpret_cast<char*>(&cantidadPro), sizeof(int));
 
-    for (int idProducto : cantidad) {
-        archivo.write(reinterpret_cast<char*>(&idProducto), sizeof(int));
-    }
-    archivo.write(fecha, sizeof(fecha));
-    archivo.write(reinterpret_cast<char*>(&total), sizeof(double));
     archivo.close();
     std::cout << "Venta guardada correctamente.\n";    
 }
@@ -379,24 +377,23 @@ bool ArchivoBinario::verificarIDventas(int id)
         return false;
     }
 
-    int idventas, idcliente, productosvendidos, cantidad;
+    int idventas, idcliente, cantidadProductos, idproducto, cantidad;
     char fecha[50];
     double total;
 
     while (archivo.read(reinterpret_cast<char*>(&idventas), sizeof(int))) {
         archivo.read(reinterpret_cast<char*>(&idcliente), sizeof(int));
-        vector<int> productosSolicitados(productosvendidos);
-        for (int i = 0; i < productosvendidos; ++i) {
-            archivo.read(reinterpret_cast<char*>(&productosSolicitados[i]), sizeof(int));
-        }
-        vector<int> cantidadpr(cantidad);
-        for (int i = 0; i < cantidad; ++i) {
-            archivo.read(reinterpret_cast<char*>(&cantidadpr[i]), sizeof(int));
-        }
-        archivo.read(fecha, sizeof(fecha));
-        fecha[sizeof(fecha) - 1] = '\0';  
         archivo.read(reinterpret_cast<char*>(&total), sizeof(double));
-       
+        archivo.read(fecha, sizeof(fecha));
+
+        archivo.read(reinterpret_cast<char*>(&cantidadProductos), sizeof(int));
+        
+        for (int i = 0; i < cantidadProductos; i++) {
+            archivo.read(reinterpret_cast<char*>(&idproducto), sizeof(int));
+            archivo.read(reinterpret_cast<char*>(&cantidad), sizeof(int));
+         
+        }
+
         if (idventas == id) {
             std::cout << "ID VENTA EXISTENTE\n";
             archivo.close();
@@ -562,69 +559,61 @@ void ArchivoBinario::reportesProductos(){
     
 }
 
-  void ArchivoBinario::reportesVentas(){
-    //abrimos para leerlo
-    std::ifstream archivo("ventas.bin", std::ios::in | std::ios::binary);                               
+void ArchivoBinario::reportesVentas() {
+    std::ifstream archivo("ventas.bin", std::ios::in | std::ios::binary);
     if (!archivo) {
         std::cerr << "No se pudo abrir el archivo de ventas para generar el reporte.\n";
         return;
     }
-    int idventa;
-    int idcliente;
-    int idproducto;
-    int cantidad;
-    double precio;
-    double subtotal;
-    double total;
+
+    int idventa, idcliente, idproducto, cantidad, cantidadProductos;
+    double precio, subtotal, total;
     char fecha[50];
-    char hora[50];
-    char nombrecliente[50];
-    char nombreproducto[50];
 
+    std::cout << "--------REPORTE DE LAS VENTAS--------\n";
+    std::cout << std::left << std::setw(10) << "ID Venta"
+              << std::setw(15) << "ID Cliente"
+              << std::setw(10) << "Total"
+              << std::setw(15) << "Fecha"
+              << std::setw(15) << "ID Producto"
+              << std::setw(10) << "Cantidad"
+              << std::setw(10) << "Precio"
+              << std::setw(10) << "Subtotal"
+              << "\n";
+    std::cout << "--------------------------------------------------\n";
 
-    cout<<"--------REPORTE DE LAS VENTAS--------\n";
-    cout << std::left << std::setw(10) << "ID Venta"
-    << std::setw(15) << "ID Cliente"
-    << std::setw(15) << "ID Producto"
-    << std::setw(10) << "Cantidad"
-    << std::setw(10) << "Precio"
-    << std::setw(10) << "Subtotal"
-    << std::setw(10) << "Total"
-    << std::setw(15) << "Fecha"
-    << std::setw(10) << "Hora"
-    << std::setw(20) << "Nombre Cliente"
-    << std::setw(20) << "Nombre Producto" << "\n";
-    cout<<"--------------------------------------------------\n";
     while (archivo.read(reinterpret_cast<char*>(&idventa), sizeof(int))) {
         archivo.read(reinterpret_cast<char*>(&idcliente), sizeof(int));
-        archivo.read(reinterpret_cast<char*>(&idproducto), sizeof(int));
-        archivo.read(reinterpret_cast<char*>(&cantidad), sizeof(int));
-        archivo.read(reinterpret_cast<char*>(&precio), sizeof(double));
-        archivo.read(reinterpret_cast<char*>(&subtotal), sizeof(double));
         archivo.read(reinterpret_cast<char*>(&total), sizeof(double));
         archivo.read(fecha, sizeof(fecha));
-        archivo.read(hora, sizeof(hora));
-        archivo.read(nombrecliente, sizeof(nombrecliente));
 
-        archivo.read(nombreproducto, sizeof(nombreproducto));
+        archivo.read(reinterpret_cast<char*>(&cantidadProductos), sizeof(int));
 
         std::cout << std::left << std::setw(10) << idventa
-        << std::setw(15) << idcliente
-        << std::setw(15) << idproducto
-        << std::setw(10) << cantidad
-        << std::setw(10) << precio
-        << std::setw(10) << subtotal
-        << std::setw(10) << total
-        << std::setw(15) << fecha
-        << std::setw(10) << hora
-        << std::setw(20) << nombrecliente
-        << std::setw(20) << nombreproducto << "\n";
-        
-        }
-        archivo.close();
-        cout<<"----------------------------------------------------\n";
-    cout<<"FIN DEL REPORTE\n";
-  }
+                  << std::setw(15) << idcliente
+                  << std::setw(10) << total
+                  << std::setw(15) << fecha
+                  << "\n";
 
+        for (int i = 0; i < cantidadProductos; i++) {
+            archivo.read(reinterpret_cast<char*>(&idproducto), sizeof(int));
+            archivo.read(reinterpret_cast<char*>(&cantidad), sizeof(int));
+            archivo.read(reinterpret_cast<char*>(&precio), sizeof(double));
+            archivo.read(reinterpret_cast<char*>(&subtotal), sizeof(double));
+
+            std::cout << std::setw(40) << " "  // Espacio para alinear con la primera línea
+                      << std::setw(15) << idproducto
+                      << std::setw(10) << cantidad
+                      << std::setw(10) << precio
+                      << std::setw(10) << subtotal
+                      << "\n";
+        }
+
+        std::cout << "--------------------------------------------------\n";
+    }
+
+    archivo.close();
+    std::cout << "FIN DEL REPORTE\n";
+}
 
     

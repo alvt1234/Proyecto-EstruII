@@ -59,3 +59,4 @@ void venta::setTotal(double total) {
 void venta::setFecha(std::string fecha) {
     this->fecha = fecha;
 }
+

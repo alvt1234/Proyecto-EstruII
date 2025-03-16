@@ -13,6 +13,7 @@ private:
     std::vector<int> cantidades;
     double total;
     std::string fecha;
+   
 
 public:
     venta();
@@ -29,6 +30,8 @@ public:
     void setCantidades(std::vector<int> cantidades);
     void setTotal(double total);
     void setFecha(std::string fecha);
+    void setPrecios(std::vector<double> precios);   // Agregado
+    void setSubtotales(std::vector<double> subtotales); // Agregado
 };
 
 #endif // VENTA_H
