@@ -25,7 +25,7 @@ void Empleados() {
     cout << "2. Buscar empleado\n";
     cout << "3. Eliminar empleado\n";
     cout << "4. Mostrar empleados\n";
-    cout << "0. Regresar al menú principal\n";
+    cout << "0. Regresar al menu principal\n";
 
     int opcion;
     cin >> opcion;
@@ -97,7 +97,7 @@ void gestionarInventarios() {
     cout << "2. Buscar producto\n";
     cout << "3. Eliminar producto\n";
     cout << "4. Mostrar productos\n";
-    cout << "0. Regresar al menú principal\n";
+    cout << "0. Regresar al menu principal\n";
 
     int opcion;
     cin >> opcion;
@@ -160,12 +160,14 @@ void gestionarInventarios() {
     }
 }
 
+
+
 void gestionarClientes() {
     cout << "Gestión de Clientes:\n";
     cout << "1. Agregar cliente\n";
     cout << "2. Buscar cliente\n";
     cout << "3. Eliminar cliente\n";
-    cout << "0. Regresar al menú principal\n";
+    cout << "0. Regresar al menu principal\n";
     
     int opcion;
     cin >> opcion;
@@ -234,7 +236,7 @@ void gestionarClientes() {
 void gestionarVentas() {
     cout << "Gestión de Ventas:\n";
     cout << "1. Realizar venta\n";
-    cout << "0. Regresar al menú principal\n";
+    cout << "0. Regresar al menu principal\n";
     
     int opcion;
     cin >> opcion;
@@ -301,7 +303,7 @@ void gestionarPedidos() {
     cout << "1. Realizar pedido\n";
     cout << "2. Buscar pedido\n";
     cout << "3. Eliminar pedido\n";
-    cout << "0. Regresar al menú principal\n";
+    cout << "0. Regresar al menu principal\n";
     
     int opcion;
     cin >> opcion;
@@ -380,6 +382,44 @@ void gestionarPedidos() {
     }
 }
 
+void reportes(ArchivoBinario& archivo){
+
+    cout << "GENERAR REPORETES:\n";
+    cout << "1. Reportes Clientes\n";
+    cout << "2. Reporte Empleados\n";
+    cout << "3. Reporte Productos\n";
+    cout << "4. Reporte Ventas\n";
+    cout << "0. Regresar al menu principal\n";
+    
+    int opcion;
+    cout<<"Ingrese una opcion: ";
+    cin >> opcion;
+
+    switch (opcion) {
+        case 1: {
+            archivo.reportesClientes();
+            break;
+        }
+        case 2: {
+           archivo.reportesEmpleados();
+            break;
+        }
+        case 3: {
+            archivo.reportesProductos();
+            break;
+        }
+        case 4: {
+            archivo.reportesVentas();
+            break;
+        }
+        case 0:
+            return;
+        default:
+            cout << "Opción no valida.\n";
+    }
+
+}
+
 int main(){
     int opcion;
     archivo.cargarClientes(clientes);
@@ -388,21 +428,22 @@ int main(){
     while (true){
     cout << "*************************************************\n";
     cout << "*                                               *\n";
-    cout << "*         Bienvenido al menú de gestión       *\n";
+    cout << "*         Bienvenido al menu de gestion         *\n";
     cout << "*                                               *\n";
     cout << "*************************************************\n";
     cout << "*                                               *\n";
-    cout << "*           Seleccione una opción:              *\n";
+    cout << "*           Seleccione una opcion:              *\n";
     cout << "*                                               *\n";
     cout << "* 1. Clientes                                   *\n";
     cout << "* 2. Productos                                  *\n";
     cout << "* 3. Pedidos                                    *\n";
     cout << "* 4. Empleados                                  *\n";
     cout << "* 5. Ventas                                     *\n";
-    cout << "* 6. Salir                                      *\n";
+    cout << "* 6. Reportes                                   *\n";
+    cout << "* 7. Salir                                      *\n";
     cout << "*                                               *\n";
     cout << "*************************************************\n";
-    cout << "Ingrese una opción: ";
+    cout << "Ingrese una opcion: ";
     cin >> opcion;
         switch (opcion){
             case 1:
@@ -422,10 +463,13 @@ int main(){
                 gestionarVentas();
                 break;
             case 6:
+                reportes(archivo);
+                break;
+            case 7:
                 cout << "Saliendo\n";  
-                return 0; 
+                return 0;  
             default:
-                cout << "Opción no válida.\n";
+                cout << "Opcion no valida.\n";
                 break;
         }
     }

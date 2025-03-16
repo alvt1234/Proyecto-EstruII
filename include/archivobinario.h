@@ -43,4 +43,9 @@ public:
     void ventas(venta v);
     bool verificarIDventas(int id);
     void buscarEmpleado(arbolB& empleado);
+   void reportesClientes();
+   void reportesEmpleados();
+   void reportesProductos();
+//   void reportesPedidos();
+    void reportesVentas();
 };

@@ -63,7 +63,8 @@
         "utility": "cpp",
         "ranges": "cpp",
         "fstream": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "iomanip": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -1,4 +1,5 @@
 #include "archivobinario.h"
+#include <iomanip>  // Para setw()
 
 void ArchivoBinario::aggCliente(cliente c) {
     int id = c.getIdCliente();
@@ -442,3 +443,188 @@ void ArchivoBinario::buscarEmpleado(arbolB& empleado)
 
     archivo.close();
 }
+
+void ArchivoBinario::reportesClientes(){
+    //abrimos para leerlo
+    std::ifstream archivo("clientes.bin", std::ios::in | std::ios::binary);
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de clientes para generar el reporte.\n";
+        return;
+    }
+
+    int idcliente;
+    char nombre[50], direccion[50], telefono[50], correo[50], historial[100];
+    double saldo;
+
+
+    cout<<"--------REPORTE DE LOS CLIENTES--------\n";
+    cout << std::left << std::setw(10) << "ID"
+              << std::setw(20) << "Nombre"
+              << std::setw(15) << "Teléfono"
+              << std::setw(25) << "Correo"
+              << std::setw(10) << "Saldo"
+              << std::setw(20) << "Historial" << "\n";
+    cout<<"--------------------------------------------------\n";
+
+    while (archivo.read(reinterpret_cast<char*>(&idcliente), sizeof(int))) {
+        archivo.read(reinterpret_cast<char*>(&saldo), sizeof(double));
+        archivo.read(nombre, sizeof(nombre));
+        archivo.read(telefono, sizeof(telefono));
+        archivo.read(correo, sizeof(correo));
+        archivo.read(historial, sizeof(historial));
+
+        cout << std::left << std::setw(10) << idcliente
+        << std::setw(20) << nombre
+        << std::setw(15) << telefono
+        << std::setw(25) << correo
+        << std::setw(10) << saldo
+        << std::setw(20) << historial << "\n";
+    }
+
+    archivo.close();
+    cout<<"----------------------------------------------------\n";
+    cout<<"FIN DEL REPORTE\n";
+}
+
+void ArchivoBinario::reportesEmpleados(){
+    //abrimos para leerlo
+    std::ifstream archivo("empleados.bin", std::ios::in | std::ios::binary);
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de empleados para generar el reporte.\n";
+        return;
+    }
+
+    int idempleado;
+    char nombre[50], departamento[50], puesto[50], estado[50];
+    double salario;
+
+    cout<<"--------REPORTE DE LOS EMPLEADOS--------\n";
+    cout << std::left << std::setw(10) << "ID"
+              << std::setw(20) << "Nombre"
+              << std::setw(20) << "Departamento"
+              << std::setw(20) << "Puesto"
+              << std::setw(10) << "Salario"
+              << std::setw(15) << "Estado" << "\n";
+    cout<<"--------------------------------------------------\n";
+    while (archivo.read(reinterpret_cast<char*>(&idempleado), sizeof(int))) {
+        archivo.read(nombre, sizeof(nombre));
+        archivo.read(departamento, sizeof(departamento));
+        archivo.read(puesto, sizeof(puesto));
+        archivo.read(reinterpret_cast<char*>(&salario), sizeof(double));
+        archivo.read(estado, sizeof(estado));
+
+        std::cout << std::left << std::setw(10) << idempleado
+                  << std::setw(20) << nombre
+                  << std::setw(20) << departamento
+                  << std::setw(20) << puesto
+                  << std::setw(10) << salario
+                  << std::setw(15) << estado << "\n";
+    }
+    archivo.close();
+    cout<<"----------------------------------------------------\n";
+    cout<<"FIN DEL REPORTE\n";
+}
+
+void ArchivoBinario::reportesProductos(){
+
+    //abrimos para leerlo
+    std::ifstream archivo("productos.bin", std::ios::in | std::ios::binary);
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de productos para generar el reporte.\n";
+        return;
+    }
+    int idproducto;
+    char nombre[50], estado[50], categoria[50];
+    double precio;
+    int cantidad;
+
+    cout<<"--------REPORTE DE LOS PRODUCTOS--------\n";
+    cout << std::left << std::setw(10) << "ID"
+              << std::setw(20) << "Nombre"
+              << std::setw(20) << "Categoría"
+              << std::setw(10) << "Precio"
+              << std::setw(10) << "Cantidad" << "\n";
+    cout<<"--------------------------------------------------\n";
+    while (archivo.read(reinterpret_cast<char*>(&idproducto), sizeof(int))) {
+        archivo.read(nombre, sizeof(nombre));       
+        archivo.read(categoria, sizeof(categoria));
+        archivo.read(reinterpret_cast<char*>(&precio), sizeof(double));
+        archivo.read(reinterpret_cast<char*>(&cantidad), sizeof(int));
+        std::cout << std::left << std::setw(10) << idproducto
+                  << std::setw(20) << nombre
+                  << std::setw(20) << categoria
+                  << std::setw(10) << precio
+                  << std::setw(10) << cantidad << "\n";
+        }
+    archivo.close();
+    cout<<"----------------------------------------------------\n";
+    cout<<"FIN DEL REPORTE\n";
+    
+}
+
+  void ArchivoBinario::reportesVentas(){
+    //abrimos para leerlo
+    std::ifstream archivo("ventas.bin", std::ios::in | std::ios::binary);                               
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de ventas para generar el reporte.\n";
+        return;
+    }
+    int idventa;
+    int idcliente;
+    int idproducto;
+    int cantidad;
+    double precio;
+    double subtotal;
+    double total;
+    char fecha[50];
+    char hora[50];
+    char nombrecliente[50];
+    char nombreproducto[50];
+
+
+    cout<<"--------REPORTE DE LAS VENTAS--------\n";
+    cout << std::left << std::setw(10) << "ID Venta"
+    << std::setw(15) << "ID Cliente"
+    << std::setw(15) << "ID Producto"
+    << std::setw(10) << "Cantidad"
+    << std::setw(10) << "Precio"
+    << std::setw(10) << "Subtotal"
+    << std::setw(10) << "Total"
+    << std::setw(15) << "Fecha"
+    << std::setw(10) << "Hora"
+    << std::setw(20) << "Nombre Cliente"
+    << std::setw(20) << "Nombre Producto" << "\n";
+    cout<<"--------------------------------------------------\n";
+    while (archivo.read(reinterpret_cast<char*>(&idventa), sizeof(int))) {
+        archivo.read(reinterpret_cast<char*>(&idcliente), sizeof(int));
+        archivo.read(reinterpret_cast<char*>(&idproducto), sizeof(int));
+        archivo.read(reinterpret_cast<char*>(&cantidad), sizeof(int));
+        archivo.read(reinterpret_cast<char*>(&precio), sizeof(double));
+        archivo.read(reinterpret_cast<char*>(&subtotal), sizeof(double));
+        archivo.read(reinterpret_cast<char*>(&total), sizeof(double));
+        archivo.read(fecha, sizeof(fecha));
+        archivo.read(hora, sizeof(hora));
+        archivo.read(nombrecliente, sizeof(nombrecliente));
+
+        archivo.read(nombreproducto, sizeof(nombreproducto));
+
+        std::cout << std::left << std::setw(10) << idventa
+        << std::setw(15) << idcliente
+        << std::setw(15) << idproducto
+        << std::setw(10) << cantidad
+        << std::setw(10) << precio
+        << std::setw(10) << subtotal
+        << std::setw(10) << total
+        << std::setw(15) << fecha
+        << std::setw(10) << hora
+        << std::setw(20) << nombrecliente
+        << std::setw(20) << nombreproducto << "\n";
+        
+        }
+        archivo.close();
+        cout<<"----------------------------------------------------\n";
+    cout<<"FIN DEL REPORTE\n";
+  }
+
+
+    
