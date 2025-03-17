@@ -102,9 +102,9 @@ void ArchivoBinario::cargarClientes(tabladispersion& clientes) {
 
 void ArchivoBinario::aggproducto(producto p)
 {
-    int idproducto=p.getid(),cantidad;
+    int idproducto=p.getid(),cantidad=p.getcantidad();
     char nombre[50], categoria[50], estado[100];
-    double precio;
+    double precio=p.getprecio();
 
     strncpy(nombre, p.getnombre().c_str(), sizeof(nombre) - 1);
     nombre[sizeof(nombre) - 1] = '\0';  // Aseguramos el terminador nulo
