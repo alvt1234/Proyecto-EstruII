@@ -8,6 +8,7 @@
 #include "empleado.h"
 #include "venta.h"
 #include "arbolB.h"
+#include "huffman.h"
 using namespace std;
 
 class ArchivoBinario {
@@ -15,6 +16,12 @@ private:
     ofstream archivo;  
 
 public:
+    HuffmanCompression huffman;
+    
+    // Metodos para comprimir descomprimir 
+    std::string comprimirDatos(const std::string& datos);
+    std::string descomprimirDatos(const std::string& datosComprimidos);
+    
     ArchivoBinario() {
         std::ofstream archivo("clientes.bin", std::ios::binary | std::ios::app);  
         std::ofstream archivoProducto("Productos.bin", std::ios::binary | std::ios::app);  
