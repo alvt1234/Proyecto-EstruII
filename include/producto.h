@@ -11,12 +11,11 @@ class producto {
     string categoria;
     double precio;
     int cantidadStock;
-    string estado ;
 
  public:
 
     producto();
-    producto(int id, string nombre, string categoria, double precio, int cantidad, string estado);
+    producto(int id, string nombre, string categoria, double precio, int cantidad);
 
     //getters
     int getid();
@@ -24,7 +23,6 @@ class producto {
     string getcategoria();
     double getprecio();
     int getcantidad();
-    string getestado();
 
     //setters
     void setid(int id);
@@ -32,7 +30,6 @@ class producto {
     void setcategoria(string categoria);
     void setprecio(double precio);
     void setcantidad(int cantidad);
-    void setestado(string estado);
 
 };
 

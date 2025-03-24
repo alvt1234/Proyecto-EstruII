@@ -1,18 +1,17 @@
 #include "../include/producto.h"
 
-producto::producto() : idProducto(0), nombre(""), categoria(""), precio(0), cantidadStock(0), estado("")
+producto::producto() : idProducto(0), nombre(""), categoria(""), precio(0), cantidadStock(0)
 {
 }
 
 
-producto::producto(int id, string nombre, string categoria, double precio, int cantidad, string estado)
+producto::producto(int id, string nombre, string categoria, double precio, int cantidad)
 {   
     this->idProducto = id;
     this->nombre = nombre;
     this->categoria = categoria;
     this->precio = precio;
     this->cantidadStock = cantidad;
-    this->estado = estado;
 }
 
 int producto::getid()
@@ -40,10 +39,7 @@ int producto::getcantidad()
     return cantidadStock;
 }
 
-string producto::getestado()
-{
-    return estado;
-}
+
 
 void producto::setid(int id)
 {
@@ -70,9 +66,5 @@ void producto::setcantidad(int cantidad)
     this->cantidadStock = cantidad;
 }
 
-void producto::setestado(string estado)
-{
-    this->estado = estado;
-}
 
 

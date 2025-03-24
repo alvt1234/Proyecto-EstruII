@@ -9,6 +9,7 @@
 #include "venta.h"
 #include "arbolB.h"
 #include "huffman.h"
+#include <iomanip>
 using namespace std;
 
 class ArchivoBinario {

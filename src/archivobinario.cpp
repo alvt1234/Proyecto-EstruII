@@ -2,7 +2,6 @@
 #include <iomanip>  // Para setw()
 
 
-
 std::string ArchivoBinario::comprimirDatos(const std::string& datos) {
     return huffman.compress(datos);
 }
@@ -13,8 +12,10 @@ std::string ArchivoBinario::descomprimirDatos(const std::string& datosComprimido
 
 void ArchivoBinario::aggCliente(cliente c) {
     int id = c.getIdCliente();
-    double saldo = c.getSaldo();
-    
+    char nombre[50], telefono[50], correo[50], historial[100];
+    double saldo=c.getSaldo();
+
+
     // Comprimir los datos de texto
     std::string nombreComprimido = comprimirDatos(c.getNombre());
     std::string telefonoComprimido = comprimirDatos(c.getTelefono());
@@ -23,51 +24,47 @@ void ArchivoBinario::aggCliente(cliente c) {
     
     // Guardar también los códigos Huffman para poder descomprimir después
     auto huffmanCodes = huffman.getCodes();
-    
+
+    strncpy(nombre, c.getNombre().c_str(), sizeof(nombre) - 1);
+    nombre[sizeof(nombre) - 1] = '\0';  // Aseguramos el terminador nulo
+    strncpy(telefono, c.getTelefono().c_str(), sizeof(telefono) - 1);
+    telefono[sizeof(telefono) - 1] = '\0'; 
+    strncpy(correo, c.getCorreo().c_str(), sizeof(correo) - 1);
+    correo[sizeof(correo) - 1] = '\0'; 
+    strncpy(historial, c.gethistorialCompras().c_str(), sizeof(historial) - 1);
+    historial[sizeof(historial) - 1] = '\0'; 
+
     std::ofstream archivo("clientes.bin", std::ios::out | std::ios::binary | std::ios::app);
+
     if (!archivo) {
         std::cerr << "No se pudo abrir el archivo de clientes para agregar datos.\n";
         return;
     }
-    
-    // Escribir los datos comprimidos
+
+    // Escribimos los datos en binario
     archivo.write(reinterpret_cast<char*>(&id), sizeof(int));
     archivo.write(reinterpret_cast<char*>(&saldo), sizeof(double));
-    
-    // Escribir longitudes de los datos comprimidos
-    int nombreLen = nombreComprimido.length();
-    int telefonoLen = telefonoComprimido.length();
-    int correoLen = correoComprimido.length();
-    int historialLen = historialComprimido.length();
-    
-    archivo.write(reinterpret_cast<char*>(&nombreLen), sizeof(int));
-    archivo.write(nombreComprimido.c_str(), nombreLen);
-    
-    archivo.write(reinterpret_cast<char*>(&telefonoLen), sizeof(int));
-    archivo.write(telefonoComprimido.c_str(), telefonoLen);
-    
-    archivo.write(reinterpret_cast<char*>(&correoLen), sizeof(int));
-    archivo.write(correoComprimido.c_str(), correoLen);
-    
-    archivo.write(reinterpret_cast<char*>(&historialLen), sizeof(int));
-    archivo.write(historialComprimido.c_str(), historialLen);
-    
-    // Guardar también la tabla de códigos Huffman
-    int codesSize = huffmanCodes.size();
-    archivo.write(reinterpret_cast<char*>(&codesSize), sizeof(int));
-    
-    for (const auto& pair : huffmanCodes) {
-        char c = pair.first;
-        std::string code = pair.second;
-        int codeLen = code.length();
-        
-        archivo.write(&c, sizeof(char));
-        archivo.write(reinterpret_cast<char*>(&codeLen), sizeof(int));
-        archivo.write(code.c_str(), codeLen);
-    }
-    
+    archivo.write(nombre, sizeof(nombre));
+    archivo.write(telefono, sizeof(telefono));
+    archivo.write(correo, sizeof(correo));
+    archivo.write(historial, sizeof(historial));
+
+     // Guardar también la tabla de códigos Huffman
+     int codesSize = huffmanCodes.size();
+     archivo.write(reinterpret_cast<char*>(&codesSize), sizeof(int));
+     
+     for (const auto& pair : huffmanCodes) {
+         char c = pair.first;
+         std::string code = pair.second;
+         int codeLen = code.length();
+         
+         archivo.write(&c, sizeof(char));
+         archivo.write(reinterpret_cast<char*>(&codeLen), sizeof(int));
+         archivo.write(code.c_str(), codeLen);
+     }
+
     archivo.close();
-    std::cout << "Cliente guardado correctamente con compresión Huffman.\n";
+    std::cout << "Cliente guardado correctamente.\n";
 }
 
 bool ArchivoBinario::verificarIDcliente(int id) {
@@ -109,58 +106,43 @@ void ArchivoBinario::cargarClientes(tabladispersion& clientes) {
     }
 
     int idcliente;
+    char nombre[50], telefono[50], correo[50], historial[100];
     double saldo;
 
+    // Leemos los clientes en un ciclo hasta llegar al final del archivo
     while (archivo.read(reinterpret_cast<char*>(&idcliente), sizeof(int))) {
         archivo.read(reinterpret_cast<char*>(&saldo), sizeof(double));
-        
-        // Leer longitudes y datos comprimidos
-        int nombreLen, telefonoLen, correoLen, historialLen;
-        
-        archivo.read(reinterpret_cast<char*>(&nombreLen), sizeof(int));
-        std::string nombreComprimido(nombreLen, ' ');
-        archivo.read(&nombreComprimido[0], nombreLen);
-        
-        archivo.read(reinterpret_cast<char*>(&telefonoLen), sizeof(int));
-        std::string telefonoComprimido(telefonoLen, ' ');
-        archivo.read(&telefonoComprimido[0], telefonoLen);
-        
-        archivo.read(reinterpret_cast<char*>(&correoLen), sizeof(int));
-        std::string correoComprimido(correoLen, ' ');
-        archivo.read(&correoComprimido[0], correoLen);
-        
-        archivo.read(reinterpret_cast<char*>(&historialLen), sizeof(int));
-        std::string historialComprimido(historialLen, ' ');
-        archivo.read(&historialComprimido[0], historialLen);
-        
-        // Leer la tabla de códigos Huffman
-        int codesSize;
-        archivo.read(reinterpret_cast<char*>(&codesSize), sizeof(int));
-        
-        std::unordered_map<char, std::string> huffmanCodes;
-        for (int i = 0; i < codesSize; i++) {
-            char c;
-            int codeLen;
-            
-            archivo.read(&c, sizeof(char));
-            archivo.read(reinterpret_cast<char*>(&codeLen), sizeof(int));
-            
-            std::string code(codeLen, ' ');
-            archivo.read(&code[0], codeLen);
-            
-            huffmanCodes[c] = code;
-        }
-        
-        // Descomprimir los datos
-        std::string nombre = huffman.decompress(nombreComprimido, huffmanCodes);
-        std::string telefono = huffman.decompress(telefonoComprimido, huffmanCodes);
-        std::string correo = huffman.decompress(correoComprimido, huffmanCodes);
-        std::string historial = huffman.decompress(historialComprimido, huffmanCodes);
+        archivo.read(nombre, sizeof(nombre));
+        archivo.read(telefono, sizeof(telefono));
+        archivo.read(correo, sizeof(correo));
+        archivo.read(historial, sizeof(historial));
 
-        // Crear la información del cliente
-        std::string info = "Nombre: " + nombre + ", Correo: " + correo +
-                           ", Tel: " + telefono + ", Saldo: " + std::to_string(saldo) +
-                           ", Historial: " + historial;
+         // Leer la tabla de códigos Huffman
+         int codesSize;
+         archivo.read(reinterpret_cast<char*>(&codesSize), sizeof(int));
+         
+         std::unordered_map<char, std::string> huffmanCodes;
+         for (int i = 0; i < codesSize; i++) {
+             char c;
+             int codeLen;
+             
+             archivo.read(&c, sizeof(char));
+             archivo.read(reinterpret_cast<char*>(&codeLen), sizeof(int));
+             
+             std::string code(codeLen, ' ');
+             archivo.read(&code[0], codeLen);
+             
+             huffmanCodes[c] = code;
+         }
+
+        // Verifica si los datos fueron leídos correctamente
+        std::cout << "Cliente cargado: Nombre: " << nombre << ", Correo: " << correo 
+                  << ", Tel: " << telefono << ", Saldo: " << saldo 
+                  << ", Historial: " << historial << std::endl;
+
+        std::string info = "Nombre: " + std::string(nombre) + ", Correo: " + std::string(correo) +
+                           ", Tel: " + std::string(telefono) + ", Saldo: " + std::to_string(saldo) +
+                           ", Historial: " + std::string(historial);
 
         // Insertamos el cliente en la tabla de dispersión
         clientes.insertar(idcliente, info);
@@ -168,7 +150,6 @@ void ArchivoBinario::cargarClientes(tabladispersion& clientes) {
 
     archivo.close();
 }
-
 
 void ArchivoBinario::aggproducto(producto p)
 {
@@ -180,8 +161,7 @@ void ArchivoBinario::aggproducto(producto p)
     nombre[sizeof(nombre) - 1] = '\0';  // Aseguramos el terminador nulo
     strncpy(categoria, p.getcategoria().c_str(), sizeof(categoria) - 1);
     categoria[sizeof(categoria) - 1] = '\0'; 
-    strncpy(estado, p.getestado().c_str(), sizeof(estado) - 1);
-    estado[sizeof(estado) - 1] = '\0'; 
+   
     
     std::ofstream archivo("Productos.bin", std::ios::out | std::ios::binary | std::ios::app);
 
@@ -196,7 +176,6 @@ void ArchivoBinario::aggproducto(producto p)
      archivo.write(categoria, sizeof(categoria));
      archivo.write(reinterpret_cast<char*>(&precio), sizeof(double));
      archivo.write(reinterpret_cast<char*>(&cantidad), sizeof(int));
-     archivo.write(estado, sizeof(estado));
  
      archivo.close();
      std::cout << "Producto agregado correctamente.\n";
@@ -220,7 +199,6 @@ bool ArchivoBinario::verificarIDproducto(int id)
             archivo.read(categoria, sizeof(categoria));
             archivo.read(reinterpret_cast<char*>(&precio), sizeof(double));
             archivo.read(reinterpret_cast<char*>(&cantidad), sizeof(int));
-            archivo.read(estado, sizeof(estado));
             if (idproducto == id) {
                 cout<<"ID PRODUCTO EXISTENTE\n";
                 archivo.close();
@@ -646,9 +624,6 @@ void ArchivoBinario::reportesVentas() {
               << std::setw(10) << "Total"
               << std::setw(15) << "Fecha"
               << std::setw(15) << "ID Producto"
-              << std::setw(10) << "Cantidad"
-              << std::setw(10) << "Precio"
-              << std::setw(10) << "Subtotal"
               << "\n";
     std::cout << "--------------------------------------------------\n";
 
@@ -663,19 +638,20 @@ void ArchivoBinario::reportesVentas() {
                   << std::setw(15) << idcliente
                   << std::setw(10) << total
                   << std::setw(15) << fecha
+                  << std::setw(15) << " "  // Espacio para alinear con la primera línea
+                  << std::setw(10) << " "  // Espacio para alinear con la primera línea
                   << "\n";
 
         for (int i = 0; i < cantidadProductos; i++) {
             archivo.read(reinterpret_cast<char*>(&idproducto), sizeof(int));
             archivo.read(reinterpret_cast<char*>(&cantidad), sizeof(int));
             archivo.read(reinterpret_cast<char*>(&precio), sizeof(double));
-            archivo.read(reinterpret_cast<char*>(&subtotal), sizeof(double));
 
             std::cout << std::setw(40) << " "  // Espacio para alinear con la primera línea
                       << std::setw(15) << idproducto
                       << std::setw(10) << cantidad
                       << std::setw(10) << precio
-                      << std::setw(10) << subtotal
+
                       << "\n";
         }
 

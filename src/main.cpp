@@ -120,11 +120,10 @@ void gestionarInventarios() {
             cin>> precio;
             cout << "Cantidad: ";
             cin>> cantidad;
-            cout<< "Estado: ";
-            cin>> estado;
+           
             productos.insertar(id); // 🔹 Agregar al Árbol B
             cout << "Producto con ID " << id << " agregado.\n";
-            producto nuevoproducto(id,nombre,categoria,precio,cantidad,estado);
+            producto nuevoproducto(id,nombre,categoria,precio,cantidad);
             archivo.aggproducto(nuevoproducto);
             break;
         }
