@@ -614,52 +614,57 @@ void ArchivoBinario::reportesVentas() {
         return;
     }
 
-    int idventa, idcliente, idproducto, cantidad, cantidadProductos;
-    double precio, subtotal, total;
+    int idventa, idcliente, cantidadProductos;
+    double total;
     char fecha[50];
 
     std::cout << "--------REPORTE DE LAS VENTAS--------\n";
-    std::cout << std::left << std::setw(10) << "ID Venta"
+    std::cout << std::left 
+              << std::setw(15) << "ID Venta"
               << std::setw(15) << "ID Cliente"
-              << std::setw(10) << "Total"
-              << std::setw(15) << "Fecha"
-              << std::setw(15) << "ID Producto"
-              << "\n";
-    std::cout << "--------------------------------------------------\n";
+              << std::setw(15) << "Total"
+              << std::setw(20) << "Fecha"
+              << std::setw(20) << "Productos" 
+              << std::setw(15) << "Cantidades" << "\n";
+    std::cout << "--------------------------------------------------------------------------------\n";
 
     while (archivo.read(reinterpret_cast<char*>(&idventa), sizeof(int))) {
         archivo.read(reinterpret_cast<char*>(&idcliente), sizeof(int));
         archivo.read(reinterpret_cast<char*>(&total), sizeof(double));
         archivo.read(fecha, sizeof(fecha));
-
         archivo.read(reinterpret_cast<char*>(&cantidadProductos), sizeof(int));
 
-        std::cout << std::left << std::setw(10) << idventa
+        // Imprimir información principal de la venta
+        std::cout << std::left 
+                  << std::setw(15) << idventa
                   << std::setw(15) << idcliente
-                  << std::setw(10) << total
-                  << std::setw(15) << fecha
-                  << std::setw(15) << " "  // Espacio para alinear con la primera línea
-                  << std::setw(10) << " "  // Espacio para alinear con la primera línea
-                  << "\n";
+                  << std::setw(15) << std::fixed << std::setprecision(2) << total
+                  << std::setw(20) << fecha;
 
+        // Leer e imprimir productos y cantidades
+        std::string productos = "";
+        std::string cantidades = "";
+        
         for (int i = 0; i < cantidadProductos; i++) {
+            int idproducto, cantidad;
             archivo.read(reinterpret_cast<char*>(&idproducto), sizeof(int));
             archivo.read(reinterpret_cast<char*>(&cantidad), sizeof(int));
-            archivo.read(reinterpret_cast<char*>(&precio), sizeof(double));
-
-            std::cout << std::setw(40) << " "  // Espacio para alinear con la primera línea
-                      << std::setw(15) << idproducto
-                      << std::setw(10) << cantidad
-                      << std::setw(10) << precio
-
-                      << "\n";
+            
+            productos += std::to_string(idproducto);
+            cantidades += std::to_string(cantidad);
+            
+            if (i < cantidadProductos - 1) {
+                productos += ", ";
+                cantidades += ", ";
+            }
         }
 
-        std::cout << "--------------------------------------------------\n";
+        std::cout << std::setw(20) << productos 
+                  << std::setw(15) << cantidades << "\n";
+        
+        std::cout << "--------------------------------------------------------------------------------\n";
     }
 
     archivo.close();
     std::cout << "FIN DEL REPORTE\n";
-}
-
-    
+} 

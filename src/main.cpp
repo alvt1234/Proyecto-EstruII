@@ -266,9 +266,9 @@ void gestionarVentas() {
                 cout << "Ingrese ID del producto " << i + 1 << ": ";
                 cin >> idProducto;
                 if(!archivo.verificarIDproducto(idProducto)){
-                    cout<<"Producto inexistente";
+                    cout<<"Producto inexistente \n";
                     i--;
-                    break;
+                    continue;
                 }else{
                 productosVendidos.push_back(idProducto);
                 cout << "Ingrese cantidad de este producto: ";
