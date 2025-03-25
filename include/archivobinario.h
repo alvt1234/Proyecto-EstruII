@@ -38,6 +38,7 @@ public:
     ~ArchivoBinario() {
         archivo.close(); 
     }
+    void mostrarEmpleados();
     void mostrarProductos();
     void aggCliente(cliente c);
     bool verificarIDcliente(int id);

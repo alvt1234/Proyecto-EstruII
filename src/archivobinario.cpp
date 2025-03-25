@@ -14,23 +14,71 @@ std::string ArchivoBinario::descomprimirDatos(const std::string& datosComprimido
 void ArchivoBinario::mostrarProductos() {
     std::ifstream archivo("Productos.bin", std::ios::binary);
     if (!archivo) {
-        std::cout << "No se pudo abrir el archivo de productos.\n";
+        std::cerr << "No se pudo abrir el archivo de productos.\n";
         return;
     }
 
-    producto prod;
+    std::cout << "\n📦 LISTA DE PRODUCTOS GUARDADOS:\n";
+    std::cout << "================================\n";
 
-    while (archivo.read(reinterpret_cast<char*>(&prod), sizeof(producto))) {
-        std::cout << "ID: " << prod.getid() << "\n";
-        std::cout << "Nombre: " << prod.getnombre() << "\n";
-        std::cout << "Categoría: " << prod.getcategoria() << "\n";
-        std::cout << "Precio: " << prod.getprecio() << "\n";
-        std::cout << "Cantidad: " << prod.getcantidad() << "\n";
-        std::cout << "---------------------------\n";
+    int id, cantidad;
+    char nombre[50], categoria[50];
+    double precio;
+
+    while (archivo.read(reinterpret_cast<char*>(&id), sizeof(int))) {
+        archivo.read(nombre, sizeof(nombre));
+        archivo.read(categoria, sizeof(categoria));
+        archivo.read(reinterpret_cast<char*>(&precio), sizeof(double));
+        archivo.read(reinterpret_cast<char*>(&cantidad), sizeof(int));
+
+        nombre[sizeof(nombre) - 1] = '\0';     // Seguridad extra
+        categoria[sizeof(categoria) - 1] = '\0';
+
+        std::cout << "ID: " << id << "\n";
+        std::cout << "Nombre: " << nombre << "\n";
+        std::cout << "Categoría: " << categoria << "\n";
+        std::cout << "Precio: " << precio << "\n";
+        std::cout << "Cantidad: " << cantidad << "\n";
+        std::cout << "--------------------------------\n";
     }
 
     archivo.close();
 }
+void ArchivoBinario::mostrarEmpleados() {
+    std::ifstream archivo("empleados.bin", std::ios::binary);
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de empleados.\n";
+        return;
+    }
+
+    int id;
+    double salario;
+    char nombre[50], departamento[50], puesto[50], estado[50];
+
+    while (archivo.read(reinterpret_cast<char*>(&id), sizeof(int))) {
+        archivo.read(nombre, sizeof(nombre));
+        archivo.read(departamento, sizeof(departamento));
+        archivo.read(puesto, sizeof(puesto));
+        archivo.read(reinterpret_cast<char*>(&salario), sizeof(double));
+        archivo.read(estado, sizeof(estado));
+
+        nombre[sizeof(nombre) - 1] = '\0';
+        departamento[sizeof(departamento) - 1] = '\0';
+        puesto[sizeof(puesto) - 1] = '\0';
+        estado[sizeof(estado) - 1] = '\0';
+
+        std::cout << "ID: " << id << "\n";
+        std::cout << "Nombre: " << nombre << "\n";
+        std::cout << "Departamento: " << departamento << "\n";
+        std::cout << "Puesto: " << puesto << "\n";
+        std::cout << "Salario: " << salario << "\n";
+        std::cout << "Estado: " << estado << "\n";
+        std::cout << "---------------------------------\n";
+    }
+
+    archivo.close();
+}
+
 
 void ArchivoBinario::aggCliente(cliente c) {
     int id = c.getIdCliente();
