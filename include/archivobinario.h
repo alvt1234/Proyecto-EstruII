@@ -39,7 +39,7 @@ public:
         archivo.close(); 
     }
     void mostrarEmpleados();
-    void mostrarProductos();
+    void mostrarProductos(int idd);
     void aggCliente(cliente c);
     bool verificarIDcliente(int id);
     void cargarClientes(tabladispersion& clientes);

@@ -68,7 +68,7 @@ void Empleados() {
             cin >> id;
             if (empleados.buscar(id)) {
                 archivo.buscarEmpleado(empleados);
-               
+                cout << "Empleado con ID " << id << " Encontrado.\n";
             } else {
                 cout << "Empleado con ID " << id << " NO encontrado.\n";
             }
@@ -98,7 +98,6 @@ void gestionarInventarios() {
     cout << "1. Agregar producto\n";
     cout << "2. Buscar producto\n";
     cout << "3. Eliminar producto\n";
-    cout << "4. Mostrar productos\n";
     cout << "0. Regresar al menu principal\n";
 
     int opcion;
@@ -133,8 +132,9 @@ void gestionarInventarios() {
             int id;
             cout << "Ingrese ID del producto a buscar: ";
             cin >> id;
-            if (productos.buscar(id)) {
+            if (archivo.verificarIDproducto(id)) {
                 cout << "Producto con ID " << id << " encontrado.\n";
+                archivo.mostrarProductos(id);
 
             } else {
                 cout << "Producto con ID " << id << " NO encontrado.\n";
@@ -151,7 +151,7 @@ void gestionarInventarios() {
         }
         case 4: {  
             cout << "Lista de productos: ";
-            archivo.mostrarProductos();
+            //archivo.mostrarProductos();
             break;
         }
         case 0:
@@ -332,7 +332,7 @@ void gestionarPedidos() {
                 int idProducto;
                 cout << "Ingrese ID del producto " << i + 1 << ": ";
                 cin >> idProducto;
-                if(!archivo.verificarIDproducto(idProducto)){
+                if(!archivo.verificarIDpedido(idProducto)){
                     cout << "El producto no existe.\n";
                     i--;
                 }else
@@ -404,6 +404,7 @@ void reportes(ArchivoBinario& archivo){
             break;
         }
         case 2: {
+            
            archivo.reportesEmpleados();
             break;
         }
@@ -435,6 +436,7 @@ void reportes(ArchivoBinario& archivo){
             break;
         }
         case 6: {
+            
             archivo.reportesPedidos();
             break;
         }
@@ -450,7 +452,7 @@ int main(){
     int opcion;
     archivo.cargarClientes(clientes);
     archivo.buscarEmpleado(empleados);
-    archivo.buscarpedido(pedidos);
+    
     while (true){
     cout << "*************************************************\n";
     cout << "*                                               *\n";

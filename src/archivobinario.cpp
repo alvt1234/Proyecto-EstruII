@@ -1,5 +1,5 @@
 #include "archivobinario.h"
-#include <iomanip>  // Para setw()
+#include <iomanip>  
 #include <thread>
 #include <chrono>
 #include <mutex>
@@ -11,7 +11,7 @@ std::string ArchivoBinario::comprimirDatos(const std::string& datos) {
 std::string ArchivoBinario::descomprimirDatos(const std::string& datosComprimidos) {
     return huffman.decompress(datosComprimidos, huffman.getCodes());
 }
-void ArchivoBinario::mostrarProductos() {
+void ArchivoBinario::mostrarProductos(int idd) {
     std::ifstream archivo("Productos.bin", std::ios::binary);
     if (!archivo) {
         std::cerr << "No se pudo abrir el archivo de productos.\n";
@@ -31,15 +31,17 @@ void ArchivoBinario::mostrarProductos() {
         archivo.read(reinterpret_cast<char*>(&precio), sizeof(double));
         archivo.read(reinterpret_cast<char*>(&cantidad), sizeof(int));
 
-        nombre[sizeof(nombre) - 1] = '\0';     // Seguridad extra
+        nombre[sizeof(nombre) - 1] = '\0';     
         categoria[sizeof(categoria) - 1] = '\0';
-
+        if(idd==id){
         std::cout << "ID: " << id << "\n";
         std::cout << "Nombre: " << nombre << "\n";
         std::cout << "Categoría: " << categoria << "\n";
         std::cout << "Precio: " << precio << "\n";
         std::cout << "Cantidad: " << cantidad << "\n";
         std::cout << "--------------------------------\n";
+        break;
+        }
     }
 
     archivo.close();
@@ -86,14 +88,6 @@ void ArchivoBinario::aggCliente(cliente c) {
     double saldo=c.getSaldo();
 
 
-    // Comprimir los datos de texto
-    /*std::string nombreComprimido = comprimirDatos(c.getNombre());
-    std::string telefonoComprimido = comprimirDatos(c.getTelefono());
-    std::string correoComprimido = comprimirDatos(c.getCorreo());
-    std::string historialComprimido = comprimirDatos(c.gethistorialCompras());
-    
-    // Guardar también los códigos Huffman para poder descomprimir después
-    auto huffmanCodes = huffman.getCodes();*/
 
     strncpy(nombre, c.getNombre().c_str(), sizeof(nombre) - 1);
     nombre[sizeof(nombre) - 1] = '\0';  // Aseguramos el terminador nulo
@@ -119,20 +113,6 @@ void ArchivoBinario::aggCliente(cliente c) {
     archivo.write(correo, sizeof(correo));
     archivo.write(historial, sizeof(historial));
 
-     // Guardar también la tabla de códigos Huffman
-    /* int codesSize = huffmanCodes.size();
-     archivo.write(reinterpret_cast<char*>(&codesSize), sizeof(int));
-     
-     for (const auto& pair : huffmanCodes) {
-         char c = pair.first;
-         std::string code = pair.second;
-         int codeLen = code.length();
-         
-         archivo.write(&c, sizeof(char));
-         archivo.write(reinterpret_cast<char*>(&codeLen), sizeof(int));
-         archivo.write(code.c_str(), codeLen);
-     }
-*/
     archivo.close();
     std::cout << "Cliente guardado correctamente.\n";
 }
@@ -187,28 +167,7 @@ void ArchivoBinario::cargarClientes(tabladispersion& clientes) {
         archivo.read(correo, sizeof(correo));
         archivo.read(historial, sizeof(historial));
 
-         // Leer la tabla de códigos Huffman
-        /* int codesSize;
-         archivo.read(reinterpret_cast<char*>(&codesSize), sizeof(int));
-         
-         std::unordered_map<char, std::string> huffmanCodes;
-         for (int i = 0; i < codesSize; i++) {
-             char c;
-             int codeLen;
-             
-             archivo.read(&c, sizeof(char));
-             archivo.read(reinterpret_cast<char*>(&codeLen), sizeof(int));
-             
-             std::string code(codeLen, ' ');
-             archivo.read(&code[0], codeLen);
-             
-             huffmanCodes[c] = code;
-         }
-         */
-        // Verifica si los datos fueron leídos correctamente
-        /*std::cout << "Cliente cargado: Nombre: " << nombre << ", Correo: " << correo 
-                  << ", Tel: " << telefono << ", Saldo: " << saldo 
-                  << ", Historial: " << historial << std::endl;*/
+  
 
         std::string info = "Nombre: " + std::string(nombre) + ", Correo: " + std::string(correo) +
                            ", Tel: " + std::string(telefono) + ", Saldo: " + std::to_string(saldo) +
