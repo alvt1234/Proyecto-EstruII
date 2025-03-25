@@ -391,6 +391,7 @@ void reportes(ArchivoBinario& archivo){
     cout << "3. Reporte Productos\n";
     cout << "4. Reporte Ventas\n";
     cout << "5. Reporte General (Paralelo)\n";
+    cout << "6. Reporte Pedidos\n";
     cout << "0. Regresar al menu principal\n";
     
     int opcion;
@@ -431,6 +432,10 @@ void reportes(ArchivoBinario& archivo){
             auto end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double, std::milli> duration = end - start;
             std::cout << "Tiempo total de lectura paralela: " << duration.count() << " ms\n";
+            break;
+        }
+        case 6: {
+            archivo.reportesPedidos();
             break;
         }
         case 0:

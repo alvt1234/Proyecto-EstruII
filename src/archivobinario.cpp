@@ -760,3 +760,70 @@ void ArchivoBinario::reportesVentas() {
     std::cout << "Tiempo de lectura: " << duration.count() << " ms\n";
     archivo.close();
 } 
+void ArchivoBinario::reportesPedidos() {
+    auto start = std::chrono::high_resolution_clock::now();
+    std::ifstream archivo("pedidos.bin", std::ios::in | std::ios::binary);
+    if (!archivo) {
+        std::cerr << "No se pudo abrir el archivo de pedidos para generar el reporte.\n";
+        return;
+    }
+
+    int idpedido, idcliente, cantidadProductos;
+    char fecha[50], estado[50];
+    double total;
+
+    std::cout << "--------REPORTE DE LOS PEDIDOS--------\n";
+    std::cout << "---------------------------------------\n";
+    std::cout << std::setw(10) << "ID PEDIDO"
+              << std::setw(20) << "ID CLIENTE"
+              << std::setw(20) << "FECHA"
+              << std::setw(15) << "ESTADO"
+              << std::setw(15) << "PRODUCTOS SOLICITADOS"
+              << std::setw(15) << "Cantidades" << "\n";
+    std::cout << "---------------------------------------\n";
+
+    while (archivo.read(reinterpret_cast<char*>(&idpedido), sizeof(int))) {
+        archivo.read(reinterpret_cast<char*>(&idcliente), sizeof(int));
+        archivo.read(fecha, sizeof(fecha));
+        archivo.read(estado, sizeof(estado));
+        archivo.read(reinterpret_cast<char*>(&cantidadProductos), sizeof(int));
+       
+
+        // Mostrar información básica del pedido
+        std::cout << std::setw(10) << idpedido
+                  << std::setw(20) << idcliente
+                  << std::setw(20) << fecha
+                  << std::setw(15) << estado;
+
+        // Leer los productos solicitados (IDs de productos)
+        std::vector<int> productosSolicitados;
+        for (int i = 0; i < cantidadProductos; i++) {
+            int idproducto;
+            archivo.read(reinterpret_cast<char*>(&idproducto), sizeof(int));
+            productosSolicitados.push_back(idproducto);
+        }
+
+        // Mostrar los productos solicitados
+        std::string productos = "";
+        for (size_t i = 0; i < productosSolicitados.size(); i++) {
+            productos += std::to_string(productosSolicitados[i]);
+            if (i < productosSolicitados.size() - 1) {
+                productos += ", ";
+            }
+        }
+
+        // Mostrar la información de productos solicitados y cantidades
+        std::cout << std::setw(20) << productos
+                  << std::setw(15) << cantidadProductos
+                  << "\n";
+
+        std::cout << "---------------------------------------\n";
+    }
+
+    archivo.close();
+    std::cout << "FIN DEL REPORTE\n";
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration = end - start;
+    std::cout << "Tiempo de lectura: " << duration.count() << " ms\n";
+}

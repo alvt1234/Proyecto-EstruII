@@ -56,6 +56,6 @@ public:
    void reportesClientes();
    void reportesEmpleados();
    void reportesProductos();
-//   void reportesPedidos();
+   void reportesPedidos();
     void reportesVentas();
 };
