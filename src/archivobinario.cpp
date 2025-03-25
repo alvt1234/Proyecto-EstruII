@@ -1,6 +1,8 @@
 #include "archivobinario.h"
 #include <iomanip>  // Para setw()
-
+#include <thread>
+#include <chrono>
+#include <mutex>
 
 std::string ArchivoBinario::comprimirDatos(const std::string& datos) {
     return huffman.compress(datos);
@@ -490,6 +492,8 @@ void ArchivoBinario::buscarEmpleado(arbolB& empleado)
 }
 
 void ArchivoBinario::reportesClientes(){
+
+    auto start = std::chrono::high_resolution_clock::now();
     //abrimos para leerlo
     std::ifstream archivo("clientes.bin", std::ios::in | std::ios::binary);
     if (!archivo) {
@@ -529,9 +533,15 @@ void ArchivoBinario::reportesClientes(){
     archivo.close();
     cout<<"----------------------------------------------------\n";
     cout<<"FIN DEL REPORTE\n";
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration = end - start;
+    std::cout << "Tiempo de lectura: " << duration.count() << " ms\n";
+    archivo.close();
 }
 
 void ArchivoBinario::reportesEmpleados(){
+    auto start = std::chrono::high_resolution_clock::now();
     //abrimos para leerlo
     std::ifstream archivo("empleados.bin", std::ios::in | std::ios::binary);
     if (!archivo) {
@@ -568,10 +578,15 @@ void ArchivoBinario::reportesEmpleados(){
     archivo.close();
     cout<<"----------------------------------------------------\n";
     cout<<"FIN DEL REPORTE\n";
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration = end - start;
+    std::cout << "Tiempo de lectura: " << duration.count() << " ms\n";
+    archivo.close();
 }
 
 void ArchivoBinario::reportesProductos(){
-
+    auto start = std::chrono::high_resolution_clock::now();
     //abrimos para leerlo
     std::ifstream archivo("productos.bin", std::ios::in | std::ios::binary);
     if (!archivo) {
@@ -605,9 +620,14 @@ void ArchivoBinario::reportesProductos(){
     cout<<"----------------------------------------------------\n";
     cout<<"FIN DEL REPORTE\n";
     
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration = end - start;
+    std::cout << "Tiempo de lectura: " << duration.count() << " ms\n";
+    archivo.close();
 }
 
 void ArchivoBinario::reportesVentas() {
+    auto start = std::chrono::high_resolution_clock::now();
     std::ifstream archivo("ventas.bin", std::ios::in | std::ios::binary);
     if (!archivo) {
         std::cerr << "No se pudo abrir el archivo de ventas para generar el reporte.\n";
@@ -667,4 +687,8 @@ void ArchivoBinario::reportesVentas() {
 
     archivo.close();
     std::cout << "FIN DEL REPORTE\n";
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration = end - start;
+    std::cout << "Tiempo de lectura: " << duration.count() << " ms\n";
+    archivo.close();
 } 

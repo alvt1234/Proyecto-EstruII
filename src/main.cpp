@@ -1,6 +1,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <thread>   
+#include <chrono>
 #include "../include/venta.h"
 #include "../include/cliente.h"
 #include "../include/producto.h"
@@ -388,6 +391,7 @@ void reportes(ArchivoBinario& archivo){
     cout << "2. Reporte Empleados\n";
     cout << "3. Reporte Productos\n";
     cout << "4. Reporte Ventas\n";
+    cout << "5. Reporte General (Paralelo)\n";
     cout << "0. Regresar al menu principal\n";
     
     int opcion;
@@ -409,6 +413,25 @@ void reportes(ArchivoBinario& archivo){
         }
         case 4: {
             archivo.reportesVentas();
+            break;
+        }
+        case 5: {
+            
+            auto start = std::chrono::high_resolution_clock::now();
+            
+            std::thread t1(&ArchivoBinario::reportesClientes, &archivo);
+            std::thread t2(&ArchivoBinario::reportesEmpleados, &archivo);
+            std::thread t3(&ArchivoBinario::reportesProductos, &archivo);
+            std::thread t4(&ArchivoBinario::reportesVentas, &archivo);
+
+            t1.join();
+            t2.join();
+            t3.join();
+            t4.join();
+
+            auto end = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double, std::milli> duration = end - start;
+            std::cout << "Tiempo total de lectura paralela: " << duration.count() << " ms\n";
             break;
         }
         case 0:
