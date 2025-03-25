@@ -27,7 +27,6 @@ void Empleados() {
     cout << "1. Agregar empleado\n";
     cout << "2. Buscar empleado\n";
     cout << "3. Eliminar empleado\n";
-    cout << "4. Mostrar empleados\n";
     cout << "0. Regresar al menu principal\n";
 
     int opcion;
@@ -80,11 +79,6 @@ void Empleados() {
             cin >> id;
             empleados.eliminar(id);
             cout << "Empleado con ID " << id << " eliminado.\n";
-            break;
-        }
-        case 4: {  // Mostrar empleados
-            cout << "Lista de empleados en orden: ";
-            empleados.recorrer();
             break;
         }
         case 0:
