@@ -145,8 +145,8 @@ void gestionarInventarios() {
             break;
         }
         case 4: {  
-            cout << "Lista de productos en orden: ";
-            productos.recorrer();
+            cout << "Lista de productos: ";
+            archivo.mostrarProductos();
             break;
         }
         case 0:

@@ -11,6 +11,26 @@ std::string ArchivoBinario::comprimirDatos(const std::string& datos) {
 std::string ArchivoBinario::descomprimirDatos(const std::string& datosComprimidos) {
     return huffman.decompress(datosComprimidos, huffman.getCodes());
 }
+void ArchivoBinario::mostrarProductos() {
+    std::ifstream archivo("Productos.bin", std::ios::binary);
+    if (!archivo) {
+        std::cout << "No se pudo abrir el archivo de productos.\n";
+        return;
+    }
+
+    producto prod;
+
+    while (archivo.read(reinterpret_cast<char*>(&prod), sizeof(producto))) {
+        std::cout << "ID: " << prod.getid() << "\n";
+        std::cout << "Nombre: " << prod.getnombre() << "\n";
+        std::cout << "Categoría: " << prod.getcategoria() << "\n";
+        std::cout << "Precio: " << prod.getprecio() << "\n";
+        std::cout << "Cantidad: " << prod.getcantidad() << "\n";
+        std::cout << "---------------------------\n";
+    }
+
+    archivo.close();
+}
 
 void ArchivoBinario::aggCliente(cliente c) {
     int id = c.getIdCliente();
