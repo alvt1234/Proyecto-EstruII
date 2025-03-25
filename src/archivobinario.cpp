@@ -120,7 +120,7 @@ void ArchivoBinario::cargarClientes(tabladispersion& clientes) {
         archivo.read(historial, sizeof(historial));
 
          // Leer la tabla de códigos Huffman
-         int codesSize;
+        /* int codesSize;
          archivo.read(reinterpret_cast<char*>(&codesSize), sizeof(int));
          
          std::unordered_map<char, std::string> huffmanCodes;
@@ -136,11 +136,11 @@ void ArchivoBinario::cargarClientes(tabladispersion& clientes) {
              
              huffmanCodes[c] = code;
          }
-
+         */
         // Verifica si los datos fueron leídos correctamente
-        std::cout << "Cliente cargado: Nombre: " << nombre << ", Correo: " << correo 
+        /*std::cout << "Cliente cargado: Nombre: " << nombre << ", Correo: " << correo 
                   << ", Tel: " << telefono << ", Saldo: " << saldo 
-                  << ", Historial: " << historial << std::endl;
+                  << ", Historial: " << historial << std::endl;*/
 
         std::string info = "Nombre: " + std::string(nombre) + ", Correo: " + std::string(correo) +
                            ", Tel: " + std::string(telefono) + ", Saldo: " + std::to_string(saldo) +
@@ -476,9 +476,9 @@ void ArchivoBinario::buscarEmpleado(arbolB& empleado)
         archivo.read(estado, sizeof(estado));
 
         // Verifica si los datos fueron leídos correctamente
-        std::cout << "Empleado cargado: Nombre: " << nombre << ", Departamento: " << departamento 
+        /*std::cout << "Empleado cargado: Nombre: " << nombre << ", Departamento: " << departamento 
                   << ", puesto: " << puesto << ", salario: " << salario 
-                  << ", Estado: " << estado << std::endl;
+                  << ", Estado: " << estado << std::endl;*/
 
         std::string info = "Nombre: " + std::string(nombre) + ", Departamento: " + std::string(departamento) +
                            ", Puesto: " + std::string(puesto) + ", Salario: " + std::to_string(salario) +
