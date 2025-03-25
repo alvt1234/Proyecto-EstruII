@@ -17,13 +17,13 @@ void ArchivoBinario::aggCliente(cliente c) {
 
 
     // Comprimir los datos de texto
-    std::string nombreComprimido = comprimirDatos(c.getNombre());
+    /*std::string nombreComprimido = comprimirDatos(c.getNombre());
     std::string telefonoComprimido = comprimirDatos(c.getTelefono());
     std::string correoComprimido = comprimirDatos(c.getCorreo());
     std::string historialComprimido = comprimirDatos(c.gethistorialCompras());
     
     // Guardar también los códigos Huffman para poder descomprimir después
-    auto huffmanCodes = huffman.getCodes();
+    auto huffmanCodes = huffman.getCodes();*/
 
     strncpy(nombre, c.getNombre().c_str(), sizeof(nombre) - 1);
     nombre[sizeof(nombre) - 1] = '\0';  // Aseguramos el terminador nulo
@@ -50,7 +50,7 @@ void ArchivoBinario::aggCliente(cliente c) {
     archivo.write(historial, sizeof(historial));
 
      // Guardar también la tabla de códigos Huffman
-     int codesSize = huffmanCodes.size();
+    /* int codesSize = huffmanCodes.size();
      archivo.write(reinterpret_cast<char*>(&codesSize), sizeof(int));
      
      for (const auto& pair : huffmanCodes) {
@@ -62,7 +62,7 @@ void ArchivoBinario::aggCliente(cliente c) {
          archivo.write(reinterpret_cast<char*>(&codeLen), sizeof(int));
          archivo.write(code.c_str(), codeLen);
      }
-
+*/
     archivo.close();
     std::cout << "Cliente guardado correctamente.\n";
 }
